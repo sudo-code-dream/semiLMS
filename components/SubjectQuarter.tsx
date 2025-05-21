@@ -39,7 +39,7 @@ const SteampunkCard = ({action}: {action: QuickActionType3}) => {
 
     const handleLearnClick = (e: React.MouseEvent) => {
         e.preventDefault();
-        router.push(`/study-materials/${subject}/${number}/q-${action.id}`);
+        router.push(`/study-materials/${subject}/${number}/q/${action.id}`);
     };
 
 

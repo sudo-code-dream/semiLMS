@@ -56,22 +56,28 @@ const MaterialUploadPage = () => {
         );
     }
 
-    const uploadFile = async (file: File): Promise<string> => {
-        const formData = new FormData();
-        formData.append('file', file);
+const uploadFile = async (file: File): Promise<string> => {
+    console.log("📤 Uploading file:", file.name, file.size);
 
-        const response = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        });
+    const formData = new FormData();
+    formData.append('file', file);
 
-        if (!response.ok) {
-            throw new Error(`Failed to upload ${file.name}`);
-        }
+    const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+    });
 
-        const data = await response.json();
-        return data.url;
-    };
+    const text = await response.text(); // Always parse text first to see raw output
+    console.log("📥 Raw response from /api/upload:", text);
+
+    if (!response.ok) {
+        throw new Error(`❌ Upload failed: ${text}`);
+    }
+
+    const data = JSON.parse(text);
+    return data.url;
+};
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
