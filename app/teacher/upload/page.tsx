@@ -60,7 +60,14 @@ const uploadFile = async (file: File): Promise<string> => {
     console.log("📤 Uploading file:", file.name, file.size);
 
     const formData = new FormData();
-    formData.append('file', file);
+
+    const timestamp = Date.now();
+    const extension = file.name.split('.').pop();
+    const baseName = file.name.replace(/\.[^/.]+$/, ""); // remove extension
+    const newFileName = `${baseName}-${timestamp}.${extension}`;
+    const versionedFile = new File([file], newFileName, { type: file.type });
+
+    formData.append('file', versionedFile);
 
     const response = await fetch('/api/upload', {
         method: 'POST',

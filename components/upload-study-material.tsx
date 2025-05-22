@@ -13,7 +13,7 @@ export const UploadStudyMaterialModal = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [subject, setSubject] = useState("");
-  const [gradeLevel, setGradeLevel] = useState<number>(1);
+  const [gradeLevel, setGradeLevel] = useState<number>(7);
   const [quarter, setQuarter] = useState<number>(1);
   const [mainFile, setMainFile] = useState<File | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
@@ -99,7 +99,7 @@ export const UploadStudyMaterialModal = () => {
                 <SelectValue placeholder="Grade Level" />
               </SelectTrigger>
               <SelectContent>
-                {[1, 2, 3, 4, 5, 6].map((grade) => (
+                {[7, 8, 9, 10, 11, 12].map((grade) => (
                   <SelectItem key={grade} value={grade.toString()}>
                     Grade {grade}
                   </SelectItem>
