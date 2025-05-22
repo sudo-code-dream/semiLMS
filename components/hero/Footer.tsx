@@ -68,7 +68,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="container mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-                <p>&copy; 2025 Fud00. All rights reserved.</p>
+                <p>&copy; 2025 Fud00 Tech. All rights reserved.</p>
             </div>
         </footer>
     )
