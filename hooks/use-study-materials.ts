@@ -2,12 +2,13 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
+import {Id} from "@/convex/_generated/dataModel";
 
 export const useStudyMaterials = () => {
   const { user } = useUser();
   const materials = useQuery(api.studyMaterials.getAll);
   const createMaterial = useMutation(api.studyMaterials.create);
-  const deleteMaterial = useMutation(api.studyMaterials.deleteStudyMaterial);
+  const deleteMaterialMutation = useMutation(api.studyMaterials.deleteStudyMaterial);
 
   const handleUpload = async (
     title: string,
@@ -42,6 +43,31 @@ export const useStudyMaterials = () => {
     } catch (error) {
       console.error("Error creating study material:", error);
       throw error;
+    }
+  };
+
+  const deleteMaterial = async (materialId: Id<"studyMaterials">) => {
+    try {
+      await deleteMaterialMutation({ id: materialId });
+      console.log("Study material deleted successfully");
+      // You can add toast notification here if you use one
+    } catch (error) {
+      console.error("Delete error:", error);
+
+      // Handle specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes("You can only delete")) {
+          alert("You can only delete study materials you created");
+        } else if (error.message.includes("not found")) {
+          alert("Study material not found");
+        } else if (error.message.includes("Not authenticated")) {
+          alert("Please sign in to delete materials");
+        } else {
+          alert("Failed to delete study material");
+        }
+      } else {
+        alert("Failed to delete study material");
+      }
     }
   };
 
