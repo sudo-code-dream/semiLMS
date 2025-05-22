@@ -41,7 +41,7 @@ export const QUICK_ACTIONS = [
         description: "Upload your study materials",
         color: "primary",
         gradient: "from-primary/10 via-primary/5 to-transparent",
-        href: "teacher/upload",
+        href: "teacher/studymaterials",
     },
     {
         icon: Users,
