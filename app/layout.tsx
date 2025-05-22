@@ -7,6 +7,7 @@ import ConvexClerkProvider from "@/components/providers/ConvexClerkProvider";
 import Navbar from "@/components/Navbar";
 import {ThemeProvider} from "@/components/providers/ThemeProvider";
 import {Toaster} from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const pathname = usePathname()
+
   return (
       <ConvexClerkProvider>
         <html lang="en" suppressHydrationWarning>
@@ -43,7 +47,7 @@ export default function RootLayout({
           >
             <SignedIn>
             <div className={'min-h-screen'}>
-              <Navbar />
+              {pathname !== "/hero" && <Navbar />}
               <main className={'px-4 sm:px-6 lg:px-8'}> {children} </main>
             </div>
             </SignedIn>
