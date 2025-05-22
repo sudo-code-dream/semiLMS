@@ -1,11 +1,26 @@
-// app/hero/layout.tsx
-import type { ReactNode } from "react";
+import Navbar from "../../components/hero/Navbar"
+import Hero from "../../components/hero/Hero"
+import Features from "../../components/hero/Features"
+import CTA from "../../components/hero/CTA"
+import Footer from "../../components/hero/Footer"
 
-export default function HeroLayout({ children }: { children: ReactNode }) {
-  return (
-    <>
-      {/* Just render children, no html/body */}
-      <main>{children}</main>
-    </>
-  );
+export default function Home() {
+    return (
+        <div className="relative min-h-screen">
+            {/* Background gradients */}
+            <div className="pointer-events-none fixed inset-0">
+                <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+                <div className="absolute right-0 top-0 h-[500px] w-[500px] bg-blue-500/10 blur-[100px]" />
+                <div className="absolute bottom-0 left-0 h-[500px] w-[500px] bg-purple-500/10 blur-[100px]" />
+            </div>
+
+            <div className="relative z-10">
+                <Navbar />
+                <Hero />
+                <Features />
+                <CTA />
+                <Footer />
+            </div>
+        </div>
+    )
 }
