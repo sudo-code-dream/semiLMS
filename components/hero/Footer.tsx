@@ -6,8 +6,8 @@ export default function Footer() {
         <footer className="bg-gray-900 text-white py-12">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">StreamLine</h3>
-                    <p className="text-gray-400">Streamlining your workflow, one task at a time.</p>
+                    <h3 className="text-lg font-semibold mb-4">Fudemy</h3>
+                    <p className="text-gray-400">Fudemy: Where Learning Meets Simplicity.</p>
                 </div>
                 <div>
                     <h4 className="text-lg font-semibold mb-4">Product</h4>
@@ -68,7 +68,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="container mx-auto mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
-                <p>&copy; 2025 StreamLine. All rights reserved.</p>
+                <p>&copy; 2025 Fud00. All rights reserved.</p>
             </div>
         </footer>
     )

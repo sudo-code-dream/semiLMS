@@ -11,7 +11,7 @@ export default function Navbar() {
                             href="/"
                             className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent"
                         >
-                            huly
+                            Fudemy
                         </Link>
                         <div className="hidden md:block ml-10">
                             <div className="flex items-center space-x-8">
@@ -19,13 +19,13 @@ export default function Navbar() {
                                     Pricing
                                 </Link>
                                 <Link href="#" className="text-sm text-gray-300 hover:text-white">
-                                    Resources
+                                    Features
                                 </Link>
                                 <Link href="#" className="text-sm text-gray-300 hover:text-white">
-                                    Community
+                                    About
                                 </Link>
                                 <Link href="#" className="text-sm text-gray-300 hover:text-white">
-                                    Download
+                                    Contact
                                 </Link>
                             </div>
                         </div>
