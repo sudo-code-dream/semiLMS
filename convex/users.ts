@@ -45,3 +45,20 @@ export const getUserByClerkId = query({
     return user;
   },
 });
+
+export const getUserRoleData = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("clerkId"), args.userId))
+      .first();
+
+    if (!user) return null;
+
+    return {
+      role: user.role,
+      companyRole: user.companyRole ?? "", // Ensure fallback if undefined
+    };
+  },
+});

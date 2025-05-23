@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useStudyMaterials } from "@/hooks/use-study-materials";
 import { Upload } from "lucide-react";
 import {
@@ -19,59 +19,146 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import { useUserRole } from "@/hooks/useUserRole";
+import toast from "react-hot-toast";
+
+interface UploadFormData {
+  title: string;
+  description: string;
+  subject: string;
+  gradeLevel: number | null;
+  quarter: number | null;
+  banner: string;
+}
 
 export const UploadStudyMaterialModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [subject, setSubject] = useState("");
-  const [gradeLevel, setGradeLevel] = useState<number>(7);
-  const [quarter, setQuarter] = useState<number>(1);
-  const [mainFile, setMainFile] = useState<File | null>(null);
-  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
-  const [bannerFile, setBanner] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
-
+  const router = useRouter();
+  const { isTeacher, isLoading } = useUserRole();
   const { handleUpload } = useStudyMaterials();
+  const [isUploading, setIsUploading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  // Form state
+  const [formData, setFormData] = useState<UploadFormData>({
+    title: "",
+    description: "",
+    subject: "",
+    gradeLevel: null,
+    quarter: null,
+    banner: "",
+  });
+
+  // File refs
+  const mainPdfRef = useRef<HTMLInputElement>(null);
+  const additionalFilesRef = useRef<HTMLInputElement>(null);
+  const materialBannerRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
+
+  if (!isTeacher || isLoading) {
+    return (
+      <div className='container max-w-3xl mx-auto p-6'>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  const uploadFile = async (file: File): Promise<string> => {
+    console.log("📤 Uploading file:", file.name, file.size);
+
+    const formData = new FormData();
+
+    const timestamp = Date.now();
+    const extension = file.name.split(".").pop();
+    const baseName = file.name.replace(/\.[^/.]+$/, ""); // remove extension
+    const newFileName = `${baseName}-${timestamp}.${extension}`;
+    const versionedFile = new File([file], newFileName, { type: file.type });
+
+    formData.append("file", versionedFile);
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const text = await response.text(); // Parsing Text to see raw in put and etc...
+    console.log("📥 Raw response from /api/upload:", text);
+
+    if (!response.ok) {
+      throw new Error(`❌ Upload failed: ${text}`);
+    }
+
+    const data = JSON.parse(text);
+    return data.url;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!mainFile || !title) return;
+    setIsUploading(true);
 
     try {
-      // In a real app, you'd upload files to a storage service first
-      const mainContentUrl = URL.createObjectURL(mainFile);
-      const additionalUrls = additionalFiles.map((file) =>
-        URL.createObjectURL(file)
-      );
+      const { title, description, subject, gradeLevel, quarter } = formData;
 
+      // Validate required fields
+      if (!subject || !gradeLevel || !quarter || !title || !description) {
+        throw new Error("Please fill in all required fields");
+      }
+
+      if (!mainPdfRef.current?.files?.[0]) {
+        throw new Error("Please upload a main PDF file");
+      }
+
+      // Upload main PDF
+      const mainPdfUrl = await uploadFile(mainPdfRef.current.files[0]);
+
+      // Upload banner image if any
+      let materialBannerUrl: string | undefined;
+      if (materialBannerRef.current?.files?.[0]) {
+        materialBannerUrl = await uploadFile(
+          materialBannerRef.current.files[0]
+        );
+      }
+
+      // Upload additional resources if any
+      const additionalUrls: string[] = [];
+      if (additionalFilesRef.current?.files?.length) {
+        for (const file of Array.from(additionalFilesRef.current.files)) {
+          const url = await uploadFile(file);
+          additionalUrls.push(url);
+        }
+      }
+
+      // Upload video if any
+      let videoUrl: string | undefined;
+      if (videoRef.current?.files?.[0]) {
+        videoUrl = await uploadFile(videoRef.current.files[0]);
+      }
+
+      // Create study material (you'll need to update your handleUpload function to accept materialBannerUrl)
       await handleUpload(
         title,
         description,
         subject,
         gradeLevel,
         quarter,
-        mainContentUrl,
+        mainPdfUrl,
         additionalUrls,
-        videoUrl || undefined
+        videoUrl,
+        materialBannerUrl // Changed to materialBannerUrl
       );
 
-      setIsOpen(false);
-      resetForm();
+      toast.success("Study material uploaded successfully!");
+      router.push("/teacher/studymaterials");
     } catch (error) {
-      console.error("Error uploading:", error);
+      console.error("Upload error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to upload study material"
+      );
+    } finally {
+      setIsUploading(false);
     }
-  };
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setSubject("");
-    setGradeLevel(1);
-    setQuarter(1);
-    setMainFile(null);
-    setAdditionalFiles([]);
-    setVideoUrl("");
   };
 
   return (
@@ -82,27 +169,17 @@ export const UploadStudyMaterialModal = () => {
           Upload Study Material
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-w-2xl'>
+      <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Upload Study Material</DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} className='space-y-4'>
-          <Input
-            placeholder='Title'
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <Textarea
-            placeholder='Description'
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-          <div className='grid grid-cols-2 gap-4'>
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div className='space-y-2'>
+            <label className='text-sm font-medium'>Subject</label>
             <Select
-              value={subject}
-              onValueChange={(value) => setSubject(value)}>
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, subject: value }))
+              }>
               <SelectTrigger>
                 <SelectValue placeholder='Select subject' />
               </SelectTrigger>
@@ -116,25 +193,38 @@ export const UploadStudyMaterialModal = () => {
                 </SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div className='space-y-2'>
+            <label className='text-sm font-medium'>Grade Level</label>
             <Select
-              value={gradeLevel.toString()}
-              onValueChange={(value) => setGradeLevel(parseInt(value))}>
+              onValueChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  gradeLevel: parseInt(value),
+                }))
+              }>
               <SelectTrigger>
-                <SelectValue placeholder='Grade Level' />
+                <SelectValue placeholder='Select grade' />
               </SelectTrigger>
               <SelectContent>
-                {[7, 8, 9, 10, 11, 12].map((grade) => (
+                {Array.from({ length: 6 }, (_, i) => i + 7).map((grade) => (
                   <SelectItem key={grade} value={grade.toString()}>
                     Grade {grade}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className='space-y-2'>
+            <label className='text-sm font-medium'>Quarter</label>
             <Select
-              value={quarter.toString()}
-              onValueChange={(value) => setQuarter(parseInt(value))}>
+              onValueChange={(value) =>
+                setFormData((prev) => ({ ...prev, quarter: parseInt(value) }))
+              }>
               <SelectTrigger>
-                <SelectValue placeholder='Quarter' />
+                <SelectValue placeholder='Select quarter' />
               </SelectTrigger>
               <SelectContent>
                 {[1, 2, 3, 4].map((q) => (
@@ -145,36 +235,78 @@ export const UploadStudyMaterialModal = () => {
               </SelectContent>
             </Select>
           </div>
+
           <div className='space-y-2'>
-            <label className='text-sm font-medium'>Main Content (PDF)</label>
+            <label className='text-sm font-medium'>Title</label>
             <Input
-              type='file'
-              accept='.pdf'
-              onChange={(e) => setMainFile(e.target.files?.[0] || null)}
-              required
-            />
-          </div>
-          <div className='space-y-2'>
-            <label className='text-sm font-medium'>Additional Resources</label>
-            <Input
-              type='file'
-              multiple
+              placeholder='Enter material title'
+              value={formData.title}
               onChange={(e) =>
-                setAdditionalFiles(Array.from(e.target.files || []))
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
               }
             />
           </div>
+
           <div className='space-y-2'>
-            <label className='text-sm font-medium'>Banner (Image)</label>
-            <Input onChange={(e) => setBanner(e.target.value)} required />
+            <label className='text-sm font-medium'>Description</label>
+            <Textarea
+              placeholder='Enter material description'
+              value={formData.description}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
+            />
           </div>
-          <Input
-            type='file'
-            value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
-          />
-          <Button type='submit' disabled={!mainFile || !title}>
-            Upload
+
+          <div className='space-y-4'>
+            <div className='border-2 border-dashed rounded-lg p-4'>
+              <h3 className='font-medium mb-2'>Lesson Material (PDF)</h3>
+              <Input type='file' accept='.pdf' ref={mainPdfRef} />
+              <p className='text-sm text-gray-500 mt-1'>
+                Upload main lesson content (Max: 10MB)
+              </p>
+            </div>
+
+            <div className='border-2 border-dashed rounded-lg p-4'>
+              <h3 className='font-medium mb-2'>Additional Resources</h3>
+              <Input
+                type='file'
+                multiple
+                accept='.pdf,.doc,.docx,.ppt,.pptx,.xlsx,.zip'
+                ref={additionalFilesRef}
+              />
+              <p className='text-sm text-gray-500 mt-1'>
+                Support materials: worksheets, presentations, etc. (Max: 20MB
+                total)
+              </p>
+            </div>
+
+            <div className='border-2 border-dashed rounded-lg p-4'>
+              <h3 className='font-medium mb-2'>Banner</h3>
+              <Input
+                type='file'
+                accept='.png,.jpg,.jpeg'
+                ref={materialBannerRef}
+              />
+              <p className='text-sm text-gray-500 mt-1'>
+                Upload a banner for your study material (Max: 5MB)
+              </p>
+            </div>
+
+            <div className='border-2 border-dashed rounded-lg p-4'>
+              <h3 className='font-medium mb-2'>Video Content (Optional)</h3>
+              <Input type='file' accept='video/*' ref={videoRef} />
+              <p className='text-sm text-gray-500 mt-1'>
+                Upload video lessons (Max: 100MB)
+              </p>
+            </div>
+          </div>
+
+          <Button type='submit' className='w-full' disabled={isUploading}>
+            {isUploading ? "Uploading..." : "Upload Materials"}
           </Button>
         </form>
       </DialogContent>
