@@ -1,12 +1,24 @@
 // components/upload-study-material-modal.tsx
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useStudyMaterials } from "@/hooks/use-study-materials";
 import { Upload } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const UploadStudyMaterialModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +29,7 @@ export const UploadStudyMaterialModal = () => {
   const [quarter, setQuarter] = useState<number>(1);
   const [mainFile, setMainFile] = useState<File | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
+  const [bannerFile, setBanner] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
 
   const { handleUpload } = useStudyMaterials();
@@ -28,7 +41,9 @@ export const UploadStudyMaterialModal = () => {
     try {
       // In a real app, you'd upload files to a storage service first
       const mainContentUrl = URL.createObjectURL(mainFile);
-      const additionalUrls = additionalFiles.map(file => URL.createObjectURL(file));
+      const additionalUrls = additionalFiles.map((file) =>
+        URL.createObjectURL(file)
+      );
 
       await handleUpload(
         title,
@@ -63,40 +78,49 @@ export const UploadStudyMaterialModal = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Upload className="h-4 w-4 mr-2" />
+          <Upload className='h-4 w-4 mr-2' />
           Upload Study Material
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className='max-w-2xl'>
         <DialogHeader>
           <DialogTitle>Upload Study Material</DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={onSubmit} className='space-y-4'>
           <Input
-            placeholder="Title"
+            placeholder='Title'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
           <Textarea
-            placeholder="Description"
+            placeholder='Description'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
           />
-          <Input
-            placeholder="Subject"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            required
-          />
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
+            <Select
+              value={subject}
+              onValueChange={(value) => setSubject(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder='Select subject' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='computer'>Computer</SelectItem>
+                <SelectItem value='english'>English</SelectItem>
+                <SelectItem value='mathematics'>Mathematics</SelectItem>
+                <SelectItem value='science'>Science</SelectItem>
+                <SelectItem value='araling_panlipunan'>
+                  Araling Panlipunan
+                </SelectItem>
+              </SelectContent>
+            </Select>
             <Select
               value={gradeLevel.toString()}
-              onValueChange={(value) => setGradeLevel(parseInt(value))}
-            >
+              onValueChange={(value) => setGradeLevel(parseInt(value))}>
               <SelectTrigger>
-                <SelectValue placeholder="Grade Level" />
+                <SelectValue placeholder='Grade Level' />
               </SelectTrigger>
               <SelectContent>
                 {[7, 8, 9, 10, 11, 12].map((grade) => (
@@ -108,10 +132,9 @@ export const UploadStudyMaterialModal = () => {
             </Select>
             <Select
               value={quarter.toString()}
-              onValueChange={(value) => setQuarter(parseInt(value))}
-            >
+              onValueChange={(value) => setQuarter(parseInt(value))}>
               <SelectTrigger>
-                <SelectValue placeholder="Quarter" />
+                <SelectValue placeholder='Quarter' />
               </SelectTrigger>
               <SelectContent>
                 {[1, 2, 3, 4].map((q) => (
@@ -122,29 +145,38 @@ export const UploadStudyMaterialModal = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Main Content (PDF)</label>
+          <div className='space-y-2'>
+            <label className='text-sm font-medium'>Main Content (PDF)</label>
             <Input
-              type="file"
-              accept=".pdf"
+              type='file'
+              accept='.pdf'
               onChange={(e) => setMainFile(e.target.files?.[0] || null)}
               required
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Additional Resources</label>
+          <div className='space-y-2'>
+            <label className='text-sm font-medium'>Additional Resources</label>
             <Input
-              type="file"
+              type='file'
               multiple
-              onChange={(e) => setAdditionalFiles(Array.from(e.target.files || []))}
+              onChange={(e) =>
+                setAdditionalFiles(Array.from(e.target.files || []))
+              }
+            />
+          </div>
+          <div className='space-y-2'>
+            <label className='text-sm font-medium'>Banner (Image)</label>
+            <Input
+              onChange={(e) => setBanner(e.target.value)}
+              required
             />
           </div>
           <Input
-            placeholder="Video URL (optional)"
+            type="file"
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
           />
-          <Button type="submit" disabled={!mainFile || !title}>
+          <Button type='submit' disabled={!mainFile || !title}>
             Upload
           </Button>
         </form>
