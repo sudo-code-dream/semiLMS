@@ -116,3 +116,4 @@ export const getAllUsers = query({
     return await ctx.db.query("users").collect();
   },
 });
+

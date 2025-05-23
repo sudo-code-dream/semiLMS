@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
+import { useUser } from "@clerk/nextjs";
 import {
   Users,
   School,
@@ -20,8 +21,10 @@ import {
 } from "lucide-react";
 
 export default function UsersList() {
+  const { user: currentUser } = useUser();
   const users = useQuery(api.users.getAllUsers);
   const assignPlan = useMutation(api.users.assignInstitutionPlan);
+  const logAssignment = useMutation(api.assignments.logAssignment);
 
   const [selectedUserId, setSelectedUserId] = useState<Id<"users"> | null>(
     null
@@ -50,7 +53,7 @@ export default function UsersList() {
   });
 
   const handleAssign = async () => {
-    if (!selectedUserId || !schoolName) {
+    if (!selectedUserId || !schoolName || !currentUser) {
       setMessage({
         type: "error",
         text: "Please select a user and enter a school name",
@@ -63,11 +66,31 @@ export default function UsersList() {
     setMessage(null);
 
     try {
-      await assignPlan({ userId: selectedUserId, schoolName });
+      // Find the selected user details
+      const selectedUser = users?.find((user) => user._id === selectedUserId);
+      if (!selectedUser) {
+        throw new Error("Selected user not found");
+      }
+
+      // Assign the plan - this will handle authentication and role checking
+      await assignPlan({
+        userId: selectedUserId,
+        schoolName,
+      });
+
+      // Log the assignment for activity tracking
+      await logAssignment({
+        assignedToUserId: selectedUserId,
+        assignedToUserName: selectedUser.name,
+        assignedToUserEmail: selectedUser.email,
+        schoolName,
+        assignedByUserId: currentUser.id,
+        assignedByUserName: currentUser.fullName || "Unknown User",
+      });
 
       setMessage({
         type: "success",
-        text: `Institution plan for ${schoolName} has been assigned successfully`,
+        text: `Institution plan for ${schoolName} has been assigned successfully to ${selectedUser.name}`,
       });
 
       // Reset form

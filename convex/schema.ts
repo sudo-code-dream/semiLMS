@@ -67,4 +67,21 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }),
+
+  // New table for tracking assignments
+  assignments: defineTable({
+    assignedToUserId: v.id("users"),
+    assignedToUserName: v.string(),
+    assignedToUserEmail: v.string(),
+    schoolName: v.string(),
+    assignedByUserId: v.string(), // Clerk ID of the teacher who made the assignment
+    assignedByUserName: v.string(),
+    status: v.string(), // "completed", "pending", etc.
+    type: v.string(), // "institution_plan", etc.
+    createdAt: v.number(),
+  })
+    .index("by_assigned_by", ["assignedByUserId"])
+    .index("by_assigned_to", ["assignedToUserId"])
+    .index("by_type", ["type"])
+    .index("by_created_at", ["createdAt"]),
 });

@@ -1,13 +1,24 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, Video, Paperclip, Loader2, Image } from "lucide-react";
+import {
+  FileText,
+  Video,
+  Paperclip,
+  Loader2,
+  ImageIcon,
+  BookOpen,
+  Calendar,
+  GraduationCap,
+  ExternalLink,
+  Eye,
+} from "lucide-react";
 import { notFound } from "next/navigation";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const FileIcon = ({
   fileType,
@@ -16,117 +27,268 @@ const FileIcon = ({
 }) => {
   switch (fileType) {
     case "pdf":
-      return <FileText className='h-4 w-4 text-blue-500' />;
+      return <FileText className='h-5 w-5 text-blue-400' />;
     case "video":
-      return <Video className='h-4 w-4 text-red-500' />;
+      return <Video className='h-5 w-5 text-red-400' />;
     case "attachment":
-      return <Paperclip className='h-4 w-4 text-gray-500' />;
+      return <Paperclip className='h-5 w-5 text-emerald-400' />;
     default:
-      return <FileText className='h-4 w-4 text-gray-500' />;
+      return <FileText className='h-5 w-5 text-zinc-400' />;
   }
 };
 
 export default function QuarterPage() {
   const params = useParams();
-  // Add debug logging
-  console.log("URL Params:", params);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const quarterValue =
-    typeof params?.quarter === "string" ? parseInt(params.quarter) : null;
+    typeof params?.quarter === "string"
+      ? Number.parseInt(params.quarter)
+      : null;
   const quarter = !isNaN(quarterValue as number) ? quarterValue : null;
 
   // Redirect to 404 if quarter is invalid
   if (quarter === null || quarter < 1 || quarter > 4) {
     notFound();
   }
+
   const materials = useQuery(api.studyMaterials.getByQuarter, { quarter });
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
+  const getSubjectColor = (subject: string) => {
+    const subjectMap: Record<string, string> = {
+      math: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+      science: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+      english: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+      history: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+      computer: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30",
+      art: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+      music: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30",
+      "physical education":
+        "bg-orange-500/20 text-orange-400 border-orange-500/30",
+    };
+
+    const lowerSubject = subject.toLowerCase();
+    return (
+      subjectMap[lowerSubject] ||
+      "bg-zinc-500/20 text-zinc-400 border-zinc-500/30"
+    );
+  };
+
   return (
-    <div className='h-full p-4 space-y-4'>
-      <div className='flex items-center justify-between'>
-        <h1 className='text-2xl font-bold'>
-          Quarter {quarter} Study Materials
-        </h1>
+    <div className='min-h-screen bg-[#0a0c14] text-zinc-100 pb-16'>
+      {/* Header with gradient */}
+      <div className='relative overflow-hidden'>
+        <div className='absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-blue-500/10' />
+        <div className='relative container mx-auto px-6 py-12'>
+          <div className='flex items-center gap-3 mb-2'>
+            <div className='p-2 bg-emerald-500/20 rounded-lg'>
+              <BookOpen className='h-6 w-6 text-emerald-400' />
+            </div>
+            <h1 className='text-3xl font-bold bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent'>
+              Quarter {quarter} Study Materials
+            </h1>
+          </div>
+          <div className='flex items-center gap-2 text-zinc-400 ml-12'>
+            <Calendar className='h-4 w-4' />
+            <span>Academic Year 2024-2025</span>
+          </div>
+        </div>
       </div>
 
-      <ScrollArea className='h-[calc(100vh-8rem)]'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          {!materials ? (
-            <div className='col-span-full flex justify-center'>
-              <Loader2 className='h-6 w-6 animate-spin' />
+      <div className='container mx-auto px-6'>
+        {!materials ? (
+          <div className='flex flex-col items-center justify-center py-32'>
+            <Loader2 className='h-12 w-12 text-emerald-500 animate-spin mb-4' />
+            <p className='text-zinc-400 text-lg'>Loading study materials...</p>
+          </div>
+        ) : materials.length === 0 ? (
+          <div className='flex flex-col items-center justify-center py-32 text-center'>
+            <div className='p-6 bg-zinc-800/50 rounded-full mb-6'>
+              <BookOpen className='h-12 w-12 text-zinc-500' />
             </div>
-          ) : materials.length === 0 ? (
-            <div className='col-span-full text-center text-muted-foreground'>
-              No study materials found for Quarter {quarter}.
-            </div>
-          ) : (
-            materials.map((material) => (
-              <Card
-                key={material._id}
-                className='p-4 space-y-2 bg-contain bg-center bg-no-repeat bg-slate-900 hover:border-primary transition-all hover:bg-slate-800 hover:bg-opacity-50'
-                style={{
-                  backgroundImage: `url(${material?.materialBannerUrl})`,
-                }}>
-                <div className='flex items-start justify-between'>
-                  <h3 className='font-semibold'>{material.title}</h3>
+            <h2 className='text-2xl font-semibold text-zinc-300 mb-2'>
+              No Materials Found
+            </h2>
+            <p className='text-zinc-500 max-w-md'>
+              No study materials are currently available for Quarter {quarter}.
+              Check back later or contact your instructor.
+            </p>
+          </div>
+        ) : (
+          <motion.div
+            className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8'
+            variants={containerVariants}
+            initial='hidden'
+            animate='visible'>
+            {materials.map((material) => (
+              <motion.div
+                key={material._id.toString()}
+                variants={itemVariants}
+                onMouseEnter={() => setHoveredCard(material._id.toString())}
+                onMouseLeave={() => setHoveredCard(null)}
+                className='group relative'>
+                <div
+                  className={cn(
+                    "h-full rounded-2xl border border-zinc-800/50 overflow-hidden transition-all duration-300",
+                    hoveredCard === material._id.toString()
+                      ? "border-emerald-500/50 shadow-lg shadow-emerald-500/10"
+                      : "hover:border-zinc-700"
+                  )}>
+                  {/* Card Banner Image */}
+                  <div className='relative h-48 overflow-hidden'>
+                    {material.materialBannerUrl ? (
+                      <div
+                        className='absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110'
+                        style={{
+                          backgroundImage: `url(${material.materialBannerUrl})`,
+                        }}
+                      />
+                    ) : (
+                      <div className='absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900' />
+                    )}
+                    <div className='absolute inset-0 bg-gradient-to-t from-[#0a0c14] via-transparent to-transparent' />
+
+                    {/* Subject Badge */}
+                    <div
+                      className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium border ${getSubjectColor(material.subject)}`}>
+                      {material.subject}
+                    </div>
+
+                    {/* Grade Level Badge */}
+                    <div className='absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium bg-zinc-800/80 text-zinc-300 border border-zinc-700/50'>
+                      Grade {material.gradeLevel}
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className='p-6 space-y-4'>
+                    <div>
+                      <h3 className='text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors'>
+                        {material.title}
+                      </h3>
+                      <p className='text-zinc-400 line-clamp-2'>
+                        {material.description}
+                      </p>
+                    </div>
+
+                    {/* Resources Section */}
+                    <div className='space-y-3 pt-2'>
+                      <div className='flex items-center gap-2 text-xs text-zinc-500'>
+                        <GraduationCap className='h-4 w-4' />
+                        <span>Available Resources</span>
+                      </div>
+
+                      <div className='space-y-2'>
+                        {material.mainContentUrl && (
+                          <a
+                            href={material.mainContentUrl}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='flex items-center justify-between p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all group/link'>
+                            <div className='flex items-center gap-3'>
+                              <div className='p-2 rounded-md bg-blue-500/10'>
+                                <FileIcon fileType={material.fileType} />
+                              </div>
+                              <span className='text-sm text-zinc-300'>
+                                Main Content
+                              </span>
+                            </div>
+                            <ExternalLink className='h-4 w-4 text-zinc-500 group-hover/link:text-emerald-400 transition-colors' />
+                          </a>
+                        )}
+
+                        {material.videoUrl && (
+                          <a
+                            href={material.videoUrl}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='flex items-center justify-between p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all group/link'>
+                            <div className='flex items-center gap-3'>
+                              <div className='p-2 rounded-md bg-red-500/10'>
+                                <Video className='h-5 w-5 text-red-400' />
+                              </div>
+                              <span className='text-sm text-zinc-300'>
+                                Video Lesson
+                              </span>
+                            </div>
+                            <ExternalLink className='h-4 w-4 text-zinc-500 group-hover/link:text-emerald-400 transition-colors' />
+                          </a>
+                        )}
+
+                        {material.materialBannerUrl && (
+                          <a
+                            href={material.materialBannerUrl}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='flex items-center justify-between p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all group/link'>
+                            <div className='flex items-center gap-3'>
+                              <div className='p-2 rounded-md bg-purple-500/10'>
+                                <ImageIcon className='h-5 w-5 text-purple-400' />
+                              </div>
+                              <span className='text-sm text-zinc-300'>
+                                View Image
+                              </span>
+                            </div>
+                            <Eye className='h-4 w-4 text-zinc-500 group-hover/link:text-emerald-400 transition-colors' />
+                          </a>
+                        )}
+
+                        {material.additionalResourcesUrls.length > 0 && (
+                          <div className='mt-3'>
+                            <div className='text-xs text-zinc-500 mb-2'>
+                              Additional Resources
+                            </div>
+                            {material.additionalResourcesUrls.map(
+                              (url, index) => (
+                                <a
+                                  key={index}
+                                  href={url}
+                                  target='_blank'
+                                  rel='noopener noreferrer'
+                                  className='flex items-center justify-between p-2 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all group/link mb-2 last:mb-0'>
+                                  <div className='flex items-center gap-3'>
+                                    <div className='p-2 rounded-md bg-emerald-500/10'>
+                                      <Paperclip className='h-5 w-5 text-emerald-400' />
+                                    </div>
+                                    <span className='text-sm text-zinc-300'>
+                                      Resource {index + 1}
+                                    </span>
+                                  </div>
+                                  <ExternalLink className='h-4 w-4 text-zinc-500 group-hover/link:text-emerald-400 transition-colors' />
+                                </a>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className='text-sm text-muted-foreground'>
-                  {material.description}
-                </p>
-                <div className='text-sm text-muted-foreground'>
-                  Subject: {material.subject}
-                </div>
-                <div className='text-sm text-muted-foreground'>
-                  Grade Level: {material.gradeLevel}
-                </div>
-                <div className='flex flex-col space-y-2'>
-                  {material.mainContentUrl && (
-                    <a
-                      href={material.mainContentUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <FileIcon fileType={material.fileType} />
-                      <span>View Main Content</span>
-                    </a>
-                  )}
-                  {material.materialBannerUrl && (
-                    <a
-                      href={material.materialBannerUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <Image className='h-4 w-4 text-red-500' />
-                      <span>View Image</span>
-                    </a>
-                  )}
-                  {material.videoUrl && (
-                    <a
-                      href={material.videoUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <Video className='h-4 w-4 text-red-500' />
-                      <span>View Video</span>
-                    </a>
-                  )}
-                  {material.additionalResourcesUrls.map((url, index) => (
-                    <a
-                      key={index}
-                      href={url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <Paperclip className='h-4 w-4 text-gray-500' />
-                      <span>Additional Resource {index + 1}</span>
-                    </a>
-                  ))}
-                </div>
-              </Card>
-            ))
-          )}
-        </div>
-      </ScrollArea>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }

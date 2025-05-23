@@ -1,7 +1,7 @@
-"use client"
-import React from 'react';
-import {QuickActionType} from "@/constants";
-import {Card} from "@/components/ui/card";
+"use client";
+import type { QuickActionType } from "@/constants";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 // some weird tw bug, but this is how it works
 // from-orange-500/10 via-orange-500/5 to-transparent
@@ -9,38 +9,48 @@ import {Card} from "@/components/ui/card";
 // from-purple-500/10 via-purple-500/5 to-transparent
 // from-primary/10 via-primary/5 to-transparent
 
-const ActionCard = ({action, onClick }: {action: QuickActionType; onClick: () => void}) => {
-    return (
-        <Card
-            className="group relative overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-lg cursor-pointer"
-            onClick={onClick}
-        >
-            <div
-                className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-100 group-hover:opacity-50 transition-opacity`}
+const ActionCard = ({
+  action,
+  onClick,
+  className,
+}: {
+  action: QuickActionType;
+  onClick: () => void;
+  className?: string;
+}) => {
+  return (
+    <Card
+      className={cn(
+        "group relative overflow-hidden border-[#334155]/40 bg-[#1e293b]/40 hover:border-primary hover:bg-[#1e293b]/60 transition-all duration-300 hover:shadow-xl hover:shadow-[#4ade80]/5 cursor-pointer backdrop-blur-sm",
+        className
+      )}
+      onClick={onClick}>
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-30 group-hover:opacity-20 transition-opacity`}
+      />
+
+      <div className='relative p-6 size-full'>
+        <div className='space-y-3'>
+          {/* ACTION ICON */}
+          <div
+            className={`w-12 h-12 rounded-full flex items-center justify-center bg-[#1e293b]/80 border border-[#334155]/30 group-hover:scale-105 group-hover:border-[#4ade80]/20 transition-all duration-300`}>
+            <action.icon
+              className={`h-6 w-6 text-${action.color} group-hover:text-[#4ade80] transition-colors duration-300`}
             />
+          </div>
 
-            <div className="relative p-6 size-full">
-                <div className="space-y-3">
-                    {/* ACTION ICON */}
-                    <div
-                        className={`w-12 h-12 rounded-full flex items-center justify-center bg-${action.color}/10 group-hover:scale-110 transition-transform`}
-                    >
-                        <action.icon className={`h-6 w-6 text-${action.color}`} />
-                    </div>
-
-                    <div className="space-y-1">
-                        <h3 className="font-semibold text-xl group-hover:text-primary transition-colors">
-                            {action.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">{action.description}</p>
-                    </div>
-
-
-                </div>
-            </div>
-
-        </Card>
-    );
+          <div className='space-y-1'>
+            <h3 className='font-semibold text-xl text-[#e2e8f0] group-hover:text-[#4ade80] transition-colors duration-300'>
+              {action.title}
+            </h3>
+            <p className='text-sm text-[#94a3b8] group-hover:text-[#cbd5e1] transition-colors duration-300'>
+              {action.description}
+            </p>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
 };
 
 export default ActionCard;
