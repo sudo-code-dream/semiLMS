@@ -13,7 +13,11 @@ export const create = mutation({
     teacherId: v.string(),
     mainContentUrl: v.string(),
     additionalResourcesUrls: v.array(v.string()),
-    fileType: v.union(v.literal('pdf'), v.literal('video'), v.literal('attachment')),
+    fileType: v.union(
+      v.literal("pdf"),
+      v.literal("video"),
+      v.literal("attachment")
+    ),
     videoUrl: v.optional(v.string()),
     materialBannerUrl: v.optional(v.string()),
   },
@@ -30,9 +34,9 @@ export const create = mutation({
 export const getAll = query({
   handler: async (ctx) => {
     const materials = await ctx.db
-        .query("studyMaterials")
-        .order("desc")
-        .collect();
+      .query("studyMaterials")
+      .order("desc")
+      .collect();
     return materials;
   },
 });
@@ -72,10 +76,10 @@ export const getByQuarter = query({
   args: { quarter: v.number() },
   handler: async (ctx, args) => {
     const materials = await ctx.db
-        .query("studyMaterials")
-        .filter((q) => q.eq(q.field("quarter"), args.quarter))
-        .order("desc")
-        .collect();
+      .query("studyMaterials")
+      .filter((q) => q.eq(q.field("quarter"), args.quarter))
+      .order("desc")
+      .collect();
     return materials;
   },
 });

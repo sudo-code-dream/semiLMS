@@ -166,13 +166,10 @@ export const UploadStudyMaterialModal = () => {
           </div>
           <div className='space-y-2'>
             <label className='text-sm font-medium'>Banner (Image)</label>
-            <Input
-              onChange={(e) => setBanner(e.target.value)}
-              required
-            />
+            <Input onChange={(e) => setBanner(e.target.value)} required />
           </div>
           <Input
-            type="file"
+            type='file'
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
           />

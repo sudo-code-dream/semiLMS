@@ -61,7 +61,12 @@ export default function QuarterPage() {
             </div>
           ) : (
             materials.map((material) => (
-              <Card key={material._id} className='p-4 space-y-2'>
+              <Card
+                key={material._id}
+                className='p-4 space-y-2 bg-contain bg-center bg-no-repeat bg-slate-900 hover:bg-slate-800 hover:bg-opacity-50'
+                style={{
+                  backgroundImage: `url(${material?.materialBannerUrl})`,
+                }}>
                 <div className='flex items-start justify-between'>
                   <h3 className='font-semibold'>{material.title}</h3>
                 </div>

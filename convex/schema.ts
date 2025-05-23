@@ -7,16 +7,18 @@ export default defineSchema({
     email: v.string(),
     image: v.optional(v.string()),
     role: v.union(v.literal("student"), v.literal("teacher")),
-    companyRole: v.union(
-      v.literal("Ceo"),
-      v.literal("Back End Developer"),
-      v.literal("Front End Developer"),
-      v.literal("Fullstack Developer"),
-      v.literal("Prompt Engineer"),
-      v.literal("Project Manager"),
-      v.literal("") // default because user should not be part of the company
+    companyRole: v.optional(
+      v.union(
+        v.literal("Ceo"),
+        v.literal("Back End Developer"),
+        v.literal("Front End Developer"),
+        v.literal("Fullstack Developer"),
+        v.literal("Prompt Engineer"),
+        v.literal("Project Manager"),
+        v.literal("") // default because user should not be part of the company
+      )
     ),
-    isAdmin: v.boolean(), // default is false can be found in users.ts
+    isAdmin: v.optional(v.boolean()), // default is false can be found in users.ts
     clerkId: v.string(),
   }).index("by_clerk_id", ["clerkId"]),
 
@@ -54,8 +56,8 @@ export default defineSchema({
       v.literal("video"),
       v.literal("attachment")
     ),
-    materialBannerUrl: v.optional(v.string()),
     videoUrl: v.optional(v.string()), // Optional video URL
+    materialBannerUrl: v.optional(v.string()), // Optional banner URL
     createdAt: v.number(),
     updatedAt: v.number(),
   }),

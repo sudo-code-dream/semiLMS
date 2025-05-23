@@ -95,16 +95,24 @@ const MaterialUploadPage = () => {
       const { title, description, subject, gradeLevel, quarter } = formData;
 
       // Validate required fields
-
       if (!subject || !gradeLevel || !quarter || !title || !description) {
         throw new Error("Please fill in all required fields");
       }
+
       if (!mainPdfRef.current?.files?.[0]) {
         throw new Error("Please upload a main PDF file");
       }
 
       // Upload main PDF
       const mainPdfUrl = await uploadFile(mainPdfRef.current.files[0]);
+
+      // Upload banner image if any
+      let materialBannerUrl: string | undefined;
+      if (materialBannerRef.current?.files?.[0]) {
+        materialBannerUrl = await uploadFile(
+          materialBannerRef.current.files[0]
+        );
+      }
 
       // Upload additional resources if any
       const additionalUrls: string[] = [];
@@ -121,7 +129,7 @@ const MaterialUploadPage = () => {
         videoUrl = await uploadFile(videoRef.current.files[0]);
       }
 
-      // Create study material
+      // Create study material (you'll need to update your handleUpload function to accept materialBannerUrl)
       await handleUpload(
         title,
         description,
@@ -130,7 +138,8 @@ const MaterialUploadPage = () => {
         quarter,
         mainPdfUrl,
         additionalUrls,
-        videoUrl
+        videoUrl,
+        materialBannerUrl // Changed to materialBannerUrl
       );
 
       toast.success("Study material uploaded successfully!");
@@ -146,7 +155,7 @@ const MaterialUploadPage = () => {
       setIsUploading(false);
     }
   };
-
+ 
   return (
     <div className='container max-w-3xl mx-auto p-6'>
       <h1 className='text-2xl font-bold mb-6'>Upload Study Materials</h1>
@@ -266,13 +275,12 @@ const MaterialUploadPage = () => {
             <div className='border-2 border-dashed rounded-lg p-4'>
               <h3 className='font-medium mb-2'>Banner</h3>
               <Input
-                type='image'
-                multiple
+                type='file'
                 accept='.png,.jpg,.jpeg'
                 ref={materialBannerRef}
               />
               <p className='text-sm text-gray-500 mt-1'>
-                Upload a banner for your study material (Max: 20MB total)
+                Upload a banner for your study material (Max: 5MB)
               </p>
             </div>
 
