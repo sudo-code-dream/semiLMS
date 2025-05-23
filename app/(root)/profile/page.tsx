@@ -47,7 +47,7 @@ export default function UserProfile() {
     const name = user?.fullName ?? "John Doe";
     const avatar = user?.imageUrl ?? "https://your-fallback-image.png";
     const subscription =
-      (user?.publicMetadata?.subscription as string) ?? "Free Trial";
+      (user?.publicMetadata?.subscription as string) ?? "Institution Plan";
     const menuItems: MenuItem[] = [
       {
         label: "Subscription",

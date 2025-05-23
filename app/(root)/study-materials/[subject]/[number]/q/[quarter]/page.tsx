@@ -63,7 +63,7 @@ export default function QuarterPage() {
             materials.map((material) => (
               <Card
                 key={material._id}
-                className='p-4 space-y-2 bg-contain bg-center bg-no-repeat bg-slate-900 hover:bg-slate-800 hover:bg-opacity-50'
+                className='p-4 space-y-2 bg-contain bg-center bg-no-repeat bg-slate-900 hover:border-primary transition-all hover:bg-slate-800 hover:bg-opacity-50'
                 style={{
                   backgroundImage: `url(${material?.materialBannerUrl})`,
                 }}>
