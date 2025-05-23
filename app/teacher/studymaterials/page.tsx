@@ -44,6 +44,7 @@ const StudyMaterialsPage = () => {
   const { materials, deleteMaterial } = useStudyMaterials();
   const { user } = useUser(); // Get current user to check ownership
 
+
   // Helper function to check if current user can delete the material
   const canDelete = (material: StudyMaterial) => {
     return user?.id === material.teacherId;
