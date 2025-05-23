@@ -1,8 +1,8 @@
-import Navbar from "../../components/hero/Navbar"
-import Hero from "../../components/hero/Hero"
-import Features from "../../components/hero/Features"
-import CTA from "../../components/hero/CTA"
-import Footer from "../../components/hero/Footer"
+import Navbar from "./compo/Navbar"
+import Hero from "./compo/Hero"
+import Features from "./compo/Features"
+import CTA from "./compo/CTA"
+import Footer from "./compo/Footer"
 
 export default function Home() {
     return (
