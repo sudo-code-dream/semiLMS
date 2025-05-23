@@ -15,6 +15,7 @@ const StudyMaterialCard = ({action, onClick }: {action: QuickActionType2; onClic
             className="group relative overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-lg cursor-pointer"
             onClick={onClick}
         >
+            
             <div
                 className={`absolute inset-0 bg-gradient-to-br bg-center bg-no-repeat bg-contain opacity-100 group-hover:opacity-50 transition-opacity`}
                 style={{ backgroundImage: `url(${action.bannerUrl})` }}

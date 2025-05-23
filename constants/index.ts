@@ -51,6 +51,14 @@ export const QUICK_ACTIONS = [
     gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
     href: "teacher/view-scores",
   },
+  {
+    icon: Users,
+    title: "Student Management",
+    description: "Assign students to you school",
+    color: "purple-500",
+    gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
+    href: "teacher/students",
+  },
 ];
 
 export const USER_QUICK_ACTIONS = [
