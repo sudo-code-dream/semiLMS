@@ -18,6 +18,12 @@ export default defineSchema({
         v.literal("") // default because user should not be part of the company
       )
     ),
+    subscription: v.optional(
+      v.object({
+        type: v.union(v.literal("trial"), v.literal("Institution Plan")),
+        schoolName: v.optional(v.string()),
+      })
+    ),
     isAdmin: v.optional(v.boolean()), // default is false can be found in users.ts
     clerkId: v.string(),
   }).index("by_clerk_id", ["clerkId"]),

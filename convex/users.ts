@@ -62,3 +62,57 @@ export const getUserRoleData = query({
     };
   },
 });
+
+export const getSubcriptionPlan = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("clerkId"), args.userId))
+      .first();
+
+    if (!user) return null;
+
+    return {
+      role: user.role,
+      subscription: user.subscription?.type ?? "", // Ensure fallback if undefined
+      schoolname: user.subscription?.schoolName ?? "", // Ensure fallback if undefined
+    };
+  },
+});
+
+export const assignInstitutionPlan = mutation({
+  args: {
+    userId: v.id("users"), // Convex internal ID for user
+    schoolName: v.string(),
+  },
+  handler: async (ctx, { userId, schoolName }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
+    // Find the teacher by clerkId
+    const teacher = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("clerkId"), identity.subject))
+      .first();
+
+    if (!teacher || teacher.role !== "teacher") {
+      throw new Error("Only teachers can assign institution plans.");
+    }
+
+    // Update the user's subscription field
+    await ctx.db.patch(userId, {
+      subscription: {
+        type: "Institution Plan",
+        schoolName,
+      },
+    });
+  },
+});
+
+
+export const getAllUsers = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("users").collect();
+  },
+});

@@ -142,7 +142,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/filipinosub.png",
   },
   {
     icon: FaHistory,
@@ -151,7 +151,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/tlesub.png",
   },
   {
     icon: FaHistory,
@@ -160,7 +160,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/espsub.png",
   },
   {
     icon: FaHistory,
@@ -169,7 +169,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/musicsub.png",
   },
   {
     icon: FaHistory,
@@ -178,7 +178,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/arts.png",
   },
   {
     icon: FaHistory,
@@ -187,7 +187,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/pe.png",
   },
   {
     icon: FaHistory,
@@ -196,7 +196,7 @@ export const SUBJECTS_ACTIONS = [
     color: "primary",
     gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
     href: "profile",
-    bannerUrl: "/apsub.png",
+    bannerUrl: "/healthsub.png",
   },
 ];
 
