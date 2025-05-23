@@ -21,8 +21,8 @@ export const useStudyMaterials = () => {
     quarter: number,
     mainContentUrl: string,
     additionalResourcesUrls: string[] = [],
-    materialBannerUrl?: string,
-    videoUrl?: string
+    videoUrl?: string,
+    bannerUrl?: string,
   ) => {
     try {
       // Determine fileType based on mainContentUrl extension
@@ -42,8 +42,8 @@ export const useStudyMaterials = () => {
         mainContentUrl,
         additionalResourcesUrls,
         fileType, // Add this required field
-        materialBannerUrl,
         videoUrl,
+        bannerUrl
       });
     } catch (error) {
       console.error(

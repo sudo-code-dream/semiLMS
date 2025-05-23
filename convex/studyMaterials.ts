@@ -15,7 +15,7 @@ export const create = mutation({
     additionalResourcesUrls: v.array(v.string()),
     fileType: v.union(v.literal('pdf'), v.literal('video'), v.literal('attachment')),
     videoUrl: v.optional(v.string()),
-    materialBannerUrl: v.optional(v.string()),
+    bannerUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const studyMaterial = await ctx.db.insert("studyMaterials", {

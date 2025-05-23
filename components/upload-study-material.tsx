@@ -29,21 +29,51 @@ export const UploadStudyMaterialModal = () => {
   const [quarter, setQuarter] = useState<number>(1);
   const [mainFile, setMainFile] = useState<File | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
-  const [bannerFile, setBanner] = useState("");
+  const [bannerFile, setBanner] = useState<File | null>(null);
   const [videoUrl, setVideoUrl] = useState("");
 
   const { handleUpload } = useStudyMaterials();
+
+  const uploadFile = async (file: File): Promise<string> => {
+    const formData = new FormData();
+
+    const timestamp = Date.now();
+    const extension = file.name.split(".").pop();
+    const baseName = file.name.replace(/\.[^/.]+$/, ""); // remove extension
+    const newFileName = `${baseName}-${timestamp}.${extension}`;
+    const versionedFile = new File([file], newFileName, { type: file.type });
+
+    formData.append("file", versionedFile);
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const text = await response.text();
+    if (!response.ok) throw new Error(`Upload failed: ${text}`);
+
+    const data = JSON.parse(text);
+    return data.url;
+  };
+  
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mainFile || !title) return;
 
     try {
-      // In a real app, you'd upload files to a storage service first
-      const mainContentUrl = URL.createObjectURL(mainFile);
-      const additionalUrls = additionalFiles.map((file) =>
-        URL.createObjectURL(file)
-      );
+      const mainContentUrl = await uploadFile(mainFile);
+      const additionalUrls: string[] = [];
+      for (const file of additionalFiles) {
+        const url = await uploadFile(file);
+        additionalUrls.push(url);
+      }
+
+      let bannerUrl: string | undefined;
+      if (bannerFile) {
+        bannerUrl = await uploadFile(bannerFile);
+      }
 
       await handleUpload(
         title,
@@ -53,7 +83,8 @@ export const UploadStudyMaterialModal = () => {
         quarter,
         mainContentUrl,
         additionalUrls,
-        videoUrl || undefined
+        videoUrl || undefined,
+        bannerUrl
       );
 
       setIsOpen(false);
@@ -62,6 +93,7 @@ export const UploadStudyMaterialModal = () => {
       console.error("Error uploading:", error);
     }
   };
+  
 
   const resetForm = () => {
     setTitle("");
@@ -72,6 +104,7 @@ export const UploadStudyMaterialModal = () => {
     setMainFile(null);
     setAdditionalFiles([]);
     setVideoUrl("");
+    setBanner(null);
   };
 
   return (
@@ -167,12 +200,13 @@ export const UploadStudyMaterialModal = () => {
           <div className='space-y-2'>
             <label className='text-sm font-medium'>Banner (Image)</label>
             <Input
-              onChange={(e) => setBanner(e.target.value)}
-              required
+              type='file'
+              accept='.png,.jpg,.jpeg'
+              onChange={(e) => setBanner(e.target.files?.[0] || null)}
             />
           </div>
           <Input
-            type="file"
+            type='file'
             value={videoUrl}
             onChange={(e) => setVideoUrl(e.target.value)}
           />

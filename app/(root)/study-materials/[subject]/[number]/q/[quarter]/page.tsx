@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Video, Paperclip, Loader2, Image } from "lucide-react";
 import { notFound } from "next/navigation";
+import { MaterialCard } from "@/components/MaterialCard";
 
 const FileIcon = ({
   fileType,
@@ -61,63 +62,7 @@ export default function QuarterPage() {
             </div>
           ) : (
             materials.map((material) => (
-              <Card key={material._id} className='p-4 space-y-2'>
-                <div className='flex items-start justify-between'>
-                  <h3 className='font-semibold'>{material.title}</h3>
-                </div>
-                <p className='text-sm text-muted-foreground'>
-                  {material.description}
-                </p>
-                <div className='text-sm text-muted-foreground'>
-                  Subject: {material.subject}
-                </div>
-                <div className='text-sm text-muted-foreground'>
-                  Grade Level: {material.gradeLevel}
-                </div>
-                <div className='flex flex-col space-y-2'>
-                  {material.mainContentUrl && (
-                    <a
-                      href={material.mainContentUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <FileIcon fileType={material.fileType} />
-                      <span>View Main Content</span>
-                    </a>
-                  )}
-                  {material.materialBannerUrl && (
-                    <a
-                      href={material.materialBannerUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <Image className='h-4 w-4 text-red-500' />
-                      <span>View Image</span>
-                    </a>
-                  )}
-                  {material.videoUrl && (
-                    <a
-                      href={material.videoUrl}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <Video className='h-4 w-4 text-red-500' />
-                      <span>View Video</span>
-                    </a>
-                  )}
-                  {material.additionalResourcesUrls.map((url, index) => (
-                    <a
-                      key={index}
-                      href={url}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center space-x-2 text-sm hover:underline'>
-                      <Paperclip className='h-4 w-4 text-gray-500' />
-                      <span>Additional Resource {index + 1}</span>
-                    </a>
-                  ))}
-                </div>
-              </Card>
+              <MaterialCard key={material._id} material={material} />
             ))
           )}
         </div>

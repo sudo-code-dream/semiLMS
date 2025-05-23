@@ -17,7 +17,6 @@ import { Card } from "@/components/ui/card";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useStudyMaterials } from "@/hooks/use-study-materials";
 import { toast } from "react-hot-toast";
-import { notFound } from "next/navigation";
 
 interface UploadFormData {
   title: string;
@@ -25,7 +24,6 @@ interface UploadFormData {
   subject: string;
   gradeLevel: number | null;
   quarter: number | null;
-  banner: string;
 }
 
 const MaterialUploadPage = () => {
@@ -34,6 +32,7 @@ const MaterialUploadPage = () => {
   const { handleUpload } = useStudyMaterials();
   const [isUploading, setIsUploading] = useState(false);
 
+
   // Form state
   const [formData, setFormData] = useState<UploadFormData>({
     title: "",
@@ -41,7 +40,6 @@ const MaterialUploadPage = () => {
     subject: "",
     gradeLevel: null,
     quarter: null,
-    banner: "",
   });
 
   // File refs
@@ -106,6 +104,11 @@ const MaterialUploadPage = () => {
       // Upload main PDF
       const mainPdfUrl = await uploadFile(mainPdfRef.current.files[0]);
 
+      let bannerUrl: string | undefined;
+      if (materialBannerRef.current?.files?.[0]) {
+        bannerUrl = await uploadFile(materialBannerRef.current.files[0]);
+      }
+
       // Upload additional resources if any
       const additionalUrls: string[] = [];
       if (additionalFilesRef.current?.files?.length) {
@@ -130,7 +133,8 @@ const MaterialUploadPage = () => {
         quarter,
         mainPdfUrl,
         additionalUrls,
-        videoUrl
+        videoUrl,
+        bannerUrl
       );
 
       toast.success("Study material uploaded successfully!");
@@ -266,13 +270,12 @@ const MaterialUploadPage = () => {
             <div className='border-2 border-dashed rounded-lg p-4'>
               <h3 className='font-medium mb-2'>Banner</h3>
               <Input
-                type='image'
-                multiple
+                type='file'
                 accept='.png,.jpg,.jpeg'
                 ref={materialBannerRef}
               />
               <p className='text-sm text-gray-500 mt-1'>
-                Upload a banner for your study material (Max: 20MB total)
+                Upload a banner for your study material (Max: 5MB)
               </p>
             </div>
 

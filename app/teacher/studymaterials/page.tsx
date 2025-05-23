@@ -1,19 +1,28 @@
 // app/teacher/studymaterials/page.tsx
 "use client";
-import React from 'react';
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useStudyMaterials } from "@/hooks/use-study-materials";
 import { UploadStudyMaterialModal } from "@/components/upload-study-material";
-import { Loader2, Trash2, FileText, Video, Paperclip, File } from "lucide-react";
+import {
+  Loader2,
+  Trash2,
+  FileText,
+  Video,
+  Paperclip,
+  File,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
-import {Id} from "@/convex/_generated/dataModel";
+import { Id } from "@/convex/_generated/dataModel";
+import { MaterialCard } from "@/components/MaterialCard";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface StudyMaterial {
   _id: Id<"studyMaterials">;
   _creationTime: number;
-  fileType: 'pdf' | 'video' | 'attachment' | string;
+  fileType: "pdf" | "video" | "attachment" | string;
   title: string;
   description: string;
   mainContentUrl: string;
@@ -27,22 +36,24 @@ interface StudyMaterial {
   updatedAt: number;
 }
 
-const FileIcon = ({ fileType }: { fileType: StudyMaterial['fileType'] }) => {
+const FileIcon = ({ fileType }: { fileType: StudyMaterial["fileType"] }) => {
   switch (fileType) {
-    case 'pdf':
-      return <FileText className="h-4 w-4 text-blue-500" />;
-    case 'video':
-      return <Video className="h-4 w-4 text-red-500" />;
-    case 'attachment':
-      return <Paperclip className="h-4 w-4 text-gray-500" />;
+    case "pdf":
+      return <FileText className='h-4 w-4 text-blue-500' />;
+    case "video":
+      return <Video className='h-4 w-4 text-red-500' />;
+    case "attachment":
+      return <Paperclip className='h-4 w-4 text-gray-500' />;
     default:
-      return <File className="h-4 w-4 text-gray-500" />; // Default icon
+      return <File className='h-4 w-4 text-gray-500' />; // Default icon
   }
 };
 
 const StudyMaterialsPage = () => {
   const { materials, deleteMaterial } = useStudyMaterials();
   const { user } = useUser(); // Get current user to check ownership
+  const [selectedMaterialId, setSelectedMaterialId] =
+    useState<Id<"studyMaterials"> | null>(null);
 
 
   // Helper function to check if current user can delete the material
@@ -51,91 +62,62 @@ const StudyMaterialsPage = () => {
   };
 
   return (
-      <div className="h-full p-4 space-y-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Study Materials</h1>
-          <UploadStudyMaterialModal />
-        </div>
-
-        <ScrollArea className="h-[calc(100vh-8rem)]">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {!materials ? (
-                <div className="col-span-full flex justify-center">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-            ) : materials.length === 0 ? (
-                <div className="col-span-full text-center text-muted-foreground">
-                  No study materials found. Start by uploading some content!
-                </div>
-            ) : (
-                materials.map((material) => (
-                    <Card key={material._id} className="p-4 space-y-2">
-                      <div className="flex items-start justify-between">
-                        <h3 className="font-semibold">{material.title}</h3>
-                        {/* Only show delete button if user is the creator */}
-                        {canDelete(material) && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => deleteMaterial(material._id)} // FIXED: Pass ID directly
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{material.description}</p>
-
-                      {/* Show who created it */}
-                      <div className="text-xs text-muted-foreground">
-                        {canDelete(material) ? "Created by you" : "Created by another teacher"}
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        {material.fileType === 'pdf' && (
-                            <a
-                                href={material.mainContentUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm hover:underline flex items-center gap-1"
-                            >
-                              <FileIcon fileType={material.fileType} />
-                              View PDF
-                            </a>
-                        )}
-                        {material.fileType === 'video' && material.videoUrl && (
-                            <a
-                                href={material.videoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm hover:underline flex items-center gap-1"
-                            >
-                              <FileIcon fileType={material.fileType} />
-                              View Video
-                            </a>
-                        )}
-                        {material.fileType === 'attachment' && material.additionalResourcesUrls.length > 0 && (
-                            <a
-                                href={material.additionalResourcesUrls[0]}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm hover:underline flex items-center gap-1"
-                            >
-                              <FileIcon fileType={material.fileType} />
-                              View Attachment
-                            </a>
-                        )}
-                      </div>
-
-                      {/* Show subject and grade info */}
-                      <div className="text-xs text-muted-foreground border-t pt-2">
-                        {material.subject} • Grade {material.gradeLevel} • Q{material.quarter}
-                      </div>
-                    </Card>
-                ))
-            )}
-          </div>
-        </ScrollArea>
+    <div className='h-full p-4 space-y-4'>
+      <div className='flex items-center justify-between'>
+        <h1 className='text-2xl font-bold'>Study Materials</h1>
+        <UploadStudyMaterialModal />
       </div>
+
+      <ScrollArea className='h-[calc(100vh-8rem)]'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {!materials ? (
+            <div className='col-span-full flex justify-center'>
+              <Loader2 className='h-6 w-6 animate-spin' />
+            </div>
+          ) : materials.length === 0 ? (
+            <div className='col-span-full text-center text-muted-foreground'>
+              No study materials found. Start by uploading some content!
+            </div>
+          ) : (
+            materials.map((material) => (
+              <MaterialCard
+                key={material._id}
+                material={material}
+                canDelete={canDelete(material)} // pass boolean
+                onRequestDelete={() => setSelectedMaterialId(material._id)}
+              />
+            ))
+          )}
+        </div>
+      </ScrollArea>
+      <Dialog
+        open={!!selectedMaterialId}
+        onOpenChange={(open) => !open && setSelectedMaterialId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Material?</DialogTitle>
+            <p className='text-sm text-muted-foreground'>
+              This action cannot be undone.
+            </p>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant='ghost'>Cancel</Button>
+            </DialogClose>
+            <Button
+              variant='destructive'
+              onClick={() => {
+                if (selectedMaterialId) {
+                  deleteMaterial(selectedMaterialId);
+                  setSelectedMaterialId(null);
+                }
+              }}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 
