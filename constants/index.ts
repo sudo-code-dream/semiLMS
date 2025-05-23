@@ -1,4 +1,4 @@
-import {Clock, Code2, Calendar, Users, BellDot, LayoutDashboard, NotebookPen} from "lucide-react";
+import {Code2, Users, BellDot, LanguagesIcon} from "lucide-react";
 import { MdQuiz } from "react-icons/md";
 import { LuNotebookPen } from "react-icons/lu";
 import { FaComputer } from "react-icons/fa6";
@@ -49,6 +49,7 @@ export const QUICK_ACTIONS = [
         description: "Check student's scores",
         color: "purple-500",
         gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
+        href: "teacher/view-scores"
     },
 ];
 
@@ -89,52 +90,115 @@ export const USER_QUICK_ACTIONS = [
 ]
 
 export const SUBJECTS_ACTIONS = [
-    {
-        icon: FaComputer,
-        title: "Computer",
-        description: "Understanding and using digital technology.",
-        color: "primary",
-        gradient: "from-blue-500/10 via-blue-500/5 to-transparent", 
-        href: "profile",
-        bannerUrl: "/computersub.png"
-    },
-    {
-        icon: RiEnglishInput,
-        title: "English",
-        description: "Learning language, literature, and communication.",
-        color: "primary",
-        gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
-        href: "profile",
-        bannerUrl: "/englishsub.png"
-    },
-    {
-        icon: PiMathOperationsDuotone,
-        title: "Mathematics",
-        description: "Solving problems using numbers and logic.",
-        color: "primary",
-        gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
-        href: "profile",
-        bannerUrl: "/mathsub1.png"
-    },
-    {
-        icon: GiMaterialsScience,
-        title: "Science",
-        description: "Exploring nature through observation and experiments.",
-        color: "primary",
-        gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
-        href: "profile",
-        bannerUrl: "/sciencesub.png"
-    },
-    {
-        icon: FaHistory,
-        title: "Araling Panlipunan",
-        description: "Understanding history, culture, and society.",
-        color: "primary",
-        gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
-        href: "profile",
-        bannerUrl: "/apsub.png"
-    },
-]
+  {
+    icon: FaComputer,
+    title: "Computer",
+    description: "Understanding and using digital technology.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/computersub.png",
+  },
+  {
+    icon: RiEnglishInput,
+    title: "English",
+    description: "Learning language, literature, and communication.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/englishsub.png",
+  },
+  {
+    icon: PiMathOperationsDuotone,
+    title: "Mathematics",
+    description: "Solving problems using numbers and logic.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/mathsub1.png",
+  },
+  {
+    icon: GiMaterialsScience,
+    title: "Science",
+    description: "Exploring nature through observation and experiments.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/sciencesub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "Araling Panlipunan",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: LanguagesIcon,
+    title: "Filipino",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "TLE",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "ESP",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "Music",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "Arts",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "Physical Education",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+  {
+    icon: FaHistory,
+    title: "Health",
+    description: "Understanding history, culture, and society.",
+    color: "primary",
+    gradient: "from-blue-500/10 via-blue-500/5 to-transparent",
+    href: "profile",
+    bannerUrl: "/apsub.png",
+  },
+];
 
 export const SUBJECTS_QUARTERS = [
     {
