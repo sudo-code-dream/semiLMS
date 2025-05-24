@@ -67,7 +67,7 @@ export default function UserProfile() {
         !subscription && roleData.companyRole
           ? "Fud00 Tech"
           : !subscription
-            ? "(Waiting for approval)"
+            ? "Onboarding"
             : subscription,
       href: "#",
       icon: <CreditCard className='w-4 h-4' />,
