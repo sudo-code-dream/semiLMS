@@ -130,7 +130,7 @@ export default function Home() {
             {USER_QUICK_ACTIONS.map((action, index) => (
               <motion.div key={action.title} variants={itemVariants}>
                 <ActionCard
-                //@ts-ignore
+                  //@ts-ignore
                   action={action}
                   onClick={() => handleQuickAction(action.href)}
                 />

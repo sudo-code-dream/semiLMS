@@ -1,43 +1,35 @@
 "use client";
 
-import {ReactNode, useEffect, useState} from "react";
-import {StreamVideo, StreamVideoClient} from "@stream-io/video-react-sdk";
-import {useUser} from "@clerk/nextjs";
+import { ReactNode, useEffect, useState } from "react";
+import { StreamVideo, StreamVideoClient } from "@stream-io/video-react-sdk";
+import { useUser } from "@clerk/nextjs";
 import LoaderUI from "@/components/LoaderUI";
-import {streamTokenProvider} from "@/actions/stream.actions";
+import { streamTokenProvider } from "@/actions/stream.actions";
 
-const StreamVideoProvider = ({children}: {children: ReactNode}) => {
-    const [streamVideoClient, setStreamVideoClient] = useState<StreamVideoClient>();
-    const {user, isLoaded} = useUser();
+const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
+  const [streamVideoClient, setStreamVideoClient] =
+    useState<StreamVideoClient>();
+  const { user, isLoaded } = useUser();
 
-    useEffect(() => {
-        if(!isLoaded || !user) return;
+  useEffect(() => {
+    if (!isLoaded || !user) return;
 
-        const client = new StreamVideoClient({
-            apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!,
-            user:{
-                id: user?.id,
-                name: user?.firstName || "" + " " + user?.lastName || "" || user?.id,
-                image: user?.imageUrl,
-            },
-            tokenProvider: streamTokenProvider,
-        });
+    const client = new StreamVideoClient({
+      apiKey: process.env.NEXT_PUBLIC_STREAM_API_KEY!,
+      user: {
+        id: user?.id,
+        name: user?.firstName || "" + " " + user?.lastName || "" || user?.id,
+        image: user?.imageUrl,
+      },
+      tokenProvider: streamTokenProvider,
+    });
 
+    setStreamVideoClient(client);
+  }, [user, isLoaded]);
 
-        setStreamVideoClient(client);
+  if (!streamVideoClient) return <LoaderUI />;
 
-    }, [user, isLoaded]);
-
-    if(!streamVideoClient) return (
-        <LoaderUI />
-    )
-
-    return (
-        <StreamVideo client={streamVideoClient}>
-            {children}
-        </StreamVideo>
-    )
-}
-
+  return <StreamVideo client={streamVideoClient}>{children}</StreamVideo>;
+};
 
 export default StreamVideoProvider;
