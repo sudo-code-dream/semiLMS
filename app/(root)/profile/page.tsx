@@ -22,7 +22,7 @@ interface MenuItem {
   href: string;
   icon?: React.ReactNode;
   external?: boolean;
-  onClick?: (e: React.MouseEvent) => void
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 export default function UserProfile() {
@@ -30,7 +30,7 @@ export default function UserProfile() {
   const clerkId = user?.id;
   const router = useRouter();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false)
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -75,12 +75,12 @@ export default function UserProfile() {
     {
       label: "Terms & Policies",
       href: "#",
-      icon: <FileText className="w-4 h-4" />,
+      icon: <FileText className='w-4 h-4' />,
       onClick: (e) => {
-        e.preventDefault()
-        setIsTermsModalOpen(true)
+        e.preventDefault();
+        setIsTermsModalOpen(true);
+      },
     },
-  }
   ];
 
   function capitalize(str: string) {
@@ -93,15 +93,14 @@ export default function UserProfile() {
   return (
     <div className='w-full min-h-screen relative'>
       {/* Back Button - Already exists in the UI */}
-      <div className="absolute top-6 left-6 z-10">
+      <div className='absolute top-6 left-6 z-10'>
         <button
           onClick={handleGoBack}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200 shadow-sm border border-zinc-200 dark:border-zinc-700"
-          aria-label="Go back"
-        >
-          <ArrowLeft className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+          className='flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200 shadow-sm border border-zinc-200 dark:border-zinc-700'
+          aria-label='Go back'>
+          <ArrowLeft className='w-5 h-5 text-zinc-600 dark:text-zinc-400' />
         </button>
-      </div> 
+      </div>
 
       {/* Profile Card */}
       <div className='w-full max-w-sm mx-auto items-center justify-center pt-[15rem]'>

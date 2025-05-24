@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 import { motion } from "framer-motion";
-import { Clock, Calendar, Bell, School } from "lucide-react";
+import { Clock, Calendar, Bell, School, ChevronRight } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -88,18 +88,18 @@ export default function Home() {
       {/* Very subtle gradient overlay */}
       <div className='fixed inset-0 bg-gradient-to-br from-[#1e2538]/20 via-[#1e293b]/10 to-[#1e2538]/20 pointer-events-none'></div>
 
-      <div className='container max-w-7xl mx-auto p-6'>
+      <div className='container max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6'>
         {/* Welcome section with stats */}
-        <div className='mb-10'>
-          <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6'>
+        <div className='mb-6 sm:mb-10'>
+          <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
             <div>
-              <h1 className='text-3xl font-bold text-[#e2e8f0] mb-2 flex items-center gap-2'>
+              <h1 className='text-2xl sm:text-3xl font-bold text-[#e2e8f0] mb-2 flex items-center gap-2'>
                 <span className='bg-gradient-to-r from-[#4ade80] to-[#2dd4bf] bg-clip-text text-transparent'>
                   Dashboard
                 </span>{" "}
-                <MdDashboard className='text-[#4ade80] text-4xl' />
+                <MdDashboard className='text-[#4ade80] text-3xl sm:text-4xl' />
               </h1>
-              <p className='text-[#94a3b8]'>
+              <p className='text-sm sm:text-base text-[#94a3b8]'>
                 {isTeacher
                   ? "Dashboard"
                   : "Access your school's learning management system"}
@@ -107,11 +107,13 @@ export default function Home() {
             </div>
 
             {/* Optional stats section */}
-            <div className='flex gap-3'>
-              <div className='bg-[#1e293b]/60 border border-[#334155]/40 rounded-xl px-4 py-3'>
+            <div className='flex gap-3 mt-2 sm:mt-0'>
+              <div className='bg-[#1e293b]/60 border border-[#334155]/40 rounded-xl px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto'>
                 <div className='text-xs text-[#94a3b8] mb-1'>Today</div>
-                <div className='text-xl font-bold text-[#e2e8f0]'>
-                  {new Date().toLocaleDateString("en-US", { weekday: "long" })}
+                <div className='text-lg sm:text-xl font-bold text-[#e2e8f0]'>
+                  {new Date().toLocaleDateString("en-US", {
+                    weekday: window.innerWidth < 640 ? "short" : "long",
+                  })}
                 </div>
               </div>
             </div>
@@ -120,11 +122,11 @@ export default function Home() {
 
         {/* User Quick Actions */}
         <motion.div
-          className='mb-12'
+          className='mb-8 sm:mb-12'
           initial='hidden'
           animate='visible'
           variants={containerVariants}>
-          <div className='grid sm:grid-cols-2 gap-6 lg:grid-cols-4'>
+          <div className='grid grid-cols-1 xs:grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4'>
             {USER_QUICK_ACTIONS.map((action, index) => (
               <motion.div key={action.title} variants={itemVariants}>
                 <ActionCard
@@ -140,21 +142,23 @@ export default function Home() {
         {/* Teacher Section (conditionally rendered) */}
         {isTeacher && (
           <>
-            <div className='rounded-lg bg-[#1e293b]/40 border border-[#334155]/30 p-6 mt-7 mb-10'>
-              <h1 className='text-3xl font-bold text-[#e2e8f0] mb-2 flex items-center gap-2'>
+            <div className='rounded-lg bg-[#1e293b]/40 border border-[#334155]/30 p-4 sm:p-6 mt-7 mb-6 sm:mb-10'>
+              <h1 className='text-2xl sm:text-3xl font-bold text-[#e2e8f0] mb-2 flex items-center gap-2'>
                 <span className='bg-gradient-to-r from-[#4ade80] to-[#2dd4bf] bg-clip-text text-transparent'>
                   Teacher
                 </span>{" "}
-                <MdDashboard className='text-[#4ade80] text-4xl' />
+                <MdDashboard className='text-[#4ade80] text-3xl sm:text-4xl' />
               </h1>
-              <p className='text-[#94a3b8]'>Admin | Teacher Panel</p>
+              <p className='text-sm sm:text-base text-[#94a3b8]'>
+                Admin | Teacher Panel
+              </p>
             </div>
 
             <motion.div
               initial='hidden'
               animate='visible'
               variants={containerVariants}>
-              <div className='grid sm:grid-cols-2 gap-6 py-4 lg:grid-cols-4'>
+              <div className='grid grid-cols-1 xs:grid-cols-2 gap-4 sm:gap-6 py-2 sm:py-4 lg:grid-cols-4'>
                 {QUICK_ACTIONS.map((action, index) => (
                   <motion.div key={action.title} variants={itemVariants}>
                     <ActionCard
@@ -169,52 +173,55 @@ export default function Home() {
         )}
 
         {/* Recent Activity Section */}
-        <div className='mt-12 bg-[#1e293b]/40 border border-[#334155]/30 rounded-xl p-6'>
-          <div className='flex items-center justify-between mb-6'>
+        <div className='mt-8 sm:mt-12 bg-[#1e293b]/40 border border-[#334155]/30 rounded-xl p-4 sm:p-6'>
+          <div className='flex items-center justify-between mb-4 sm:mb-6'>
             <div className='flex items-center gap-2'>
-              <Clock className='h-5 w-5 text-[#4ade80]' />
-              <h2 className='text-lg font-semibold text-[#e2e8f0]'>
+              <Clock className='h-4 w-4 sm:h-5 sm:w-5 text-[#4ade80]' />
+              <h2 className='text-base sm:text-lg font-semibold text-[#e2e8f0]'>
                 Recent Activity
               </h2>
             </div>
-            <button className='text-sm text-[#4ade80] hover:text-[#86efac] transition-colors'>
+            <button className='text-xs sm:text-sm text-[#4ade80] hover:text-[#86efac] transition-colors'>
               View All
             </button>
           </div>
 
           {allActivities && allActivities.length > 0 ? (
-            <div className='space-y-4'>
+            <div className='space-y-3 sm:space-y-4'>
               {allActivities.slice(0, 5).map((activity, index) => (
                 <div
                   key={index}
-                  className='flex items-center gap-4 p-3 rounded-lg hover:bg-[#1e293b]/60 transition-colors'>
-                  <div className='w-14 h-14 rounded-lg bg-[#1e293b]/80 flex flex-col items-center justify-center'>
-                    <activity.icon className='h-6 w-6 text-[#4ade80] mb-1' />
-                    <span className='text-xs text-[#94a3b8]'>
+                  className='flex items-center gap-3 sm:gap-4 p-2 sm:p-3 rounded-lg hover:bg-[#1e293b]/60 transition-colors'>
+                  <div className='w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-[#1e293b]/80 flex flex-col items-center justify-center flex-shrink-0'>
+                    <activity.icon className='h-5 w-5 sm:h-6 sm:w-6 text-[#4ade80] mb-1' />
+                    <span className='text-[10px] sm:text-xs text-[#94a3b8]'>
                       {activity.type === "interview"
                         ? "Interview"
                         : "Assignment"}
                     </span>
                   </div>
-                  <div className='flex-1'>
-                    <h3 className='font-medium text-[#e2e8f0]'>
+                  <div className='flex-1 min-w-0'>
+                    <h3 className='font-medium text-sm sm:text-base text-[#e2e8f0] truncate'>
                       {activity.title}
                     </h3>
-                    <p className='text-sm text-[#94a3b8]'>
+                    <p className='text-xs sm:text-sm text-[#94a3b8]'>
                       {new Date(activity.timestamp).toLocaleDateString()}
                     </p>
                   </div>
-                  <div
-                    className={`px-3 py-1 rounded-full text-xs font-medium border ${activity.color}`}>
+                  <div className='hidden sm:block px-3 py-1 rounded-full text-xs font-medium border whitespace-nowrap flex-shrink-0 ${activity.color}'>
                     {activity.subtitle}
                   </div>
+                  {/* Mobile-only chevron */}
+                  <ChevronRight className='block sm:hidden h-5 w-5 text-[#4ade80] flex-shrink-0' />
                 </div>
               ))}
             </div>
           ) : (
-            <div className='text-center py-8 text-[#94a3b8]'>
-              <Bell className='h-12 w-12 mx-auto text-[#334155] mb-3' />
-              <p>No recent activity to display</p>
+            <div className='text-center py-6 sm:py-8 text-[#94a3b8]'>
+              <Bell className='h-10 w-10 sm:h-12 sm:w-12 mx-auto text-[#334155] mb-3' />
+              <p className='text-sm sm:text-base'>
+                No recent activity to display
+              </p>
             </div>
           )}
         </div>
