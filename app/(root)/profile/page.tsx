@@ -62,7 +62,7 @@ export default function UserProfile() {
   const menuItems: MenuItem[] = [
     {
       label: "Subscription",
-      value: subscription,
+      value: roleData.companyRole ? "Fud00 Tech" : subscription,
       href: "#",
       icon: <CreditCard className='w-4 h-4' />,
       external: false,

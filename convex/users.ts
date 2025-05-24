@@ -110,10 +110,8 @@ export const assignInstitutionPlan = mutation({
   },
 });
 
-
 export const getAllUsers = query({
   handler: async (ctx) => {
     return await ctx.db.query("users").collect();
   },
 });
-
