@@ -1,4 +1,4 @@
-:root {
+:global(:root) {
   --copper: #b87333;
   --brass: #b5a642;
   --bronze: #cd7f32;
