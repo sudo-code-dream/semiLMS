@@ -1,0 +1,509 @@
+:root {
+  --copper: #b87333;
+  --brass: #b5a642;
+  --bronze: #cd7f32;
+  --dark-brown: #5c4033;
+  --cream: #fffdd0;
+  --steam-gray: #708090;
+}
+
+.container {
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.card {
+  width: 340px;
+  height: 480px;
+  border-radius: 10px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card:hover {
+  transform: rotateY(5deg) rotateX(5deg);
+}
+
+.card-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #b5a642, #b87333, #cd7f32);
+  padding: 6px;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.card-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at top left, transparent 20px, #b5a642 21px),
+    radial-gradient(circle at top right, transparent 20px, #cd7f32 21px),
+    radial-gradient(circle at bottom left, transparent 20px, #cd7f32 21px),
+    radial-gradient(circle at bottom right, transparent 20px, #b5a642 21px);
+  border-radius: 10px;
+  z-index: -1;
+}
+
+.card-content {
+  position: relative;
+  background-color: #5c4033;
+  height: 100%;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.gear {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #cd7f32;
+  z-index: 1;
+  opacity: 0.25;
+  animation: rotate 4s linear infinite;
+}
+
+.gear::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 60%;
+  background: #5c4033;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gear::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 90% 50%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 10% 50%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 30% 30%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 70% 30%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 30% 70%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    ),
+    radial-gradient(
+      circle at 70% 70%,
+      transparent 25%,
+      #cd7f32 26%,
+      #cd7f32 38%,
+      transparent 39%
+    );
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.gear-1 {
+  top: -20px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  animation-duration: 120s;
+}
+
+.gear-2 {
+  bottom: -30px;
+  left: -40px;
+  width: 100px;
+  height: 100px;
+  animation-direction: reverse;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.card-image {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background-color: #708090;
+  background-image: linear-gradient(
+    45deg,
+    rgba(184, 115, 51, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(184, 115, 51, 0.2) 50%,
+    rgba(184, 115, 51, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px;
+}
+
+.card-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(92, 64, 51, 0) 0%,
+    rgba(92, 64, 51, 0.8) 100%
+  );
+}
+
+.card-body {
+  padding: 25px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.card-title {
+  font-size: 24px;
+  color: #b5a642;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  font-family: "Georgia", serif;
+}
+
+.card-text {
+  color: #fffdd0;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Pipe sistemi düzeltilmiş */
+.pipe-system {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pipe {
+  position: absolute;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #b87333, #cd7f32);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pipe-1 {
+  width: 300px;
+  height: 12px;
+  top: 200px;
+  left: -145px;
+  transform: rotate(90deg);
+}
+
+.pipe-2 {
+  width: 15px;
+  height: 120px;
+  top: 350px;
+  left: 357px;
+}
+
+.pipe-joint {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, #cd7f32, #b87333);
+
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.pipe-joint-1 {
+  top: 44px;
+  left: -5px;
+  border-radius: 100% 0 0 0;
+}
+
+.pipe-joint-2 {
+  top: 344px;
+  left: -5px;
+  border-radius: 0 0 0 100%;
+}
+.pipe-joint-3 {
+  top: 344px;
+  left: 355px;
+  border-radius: 0 100% 0 0;
+}
+.pipe-joint-4 {
+  top: 464px;
+  left: 355px;
+  border-radius: 0 0 100% 0;
+}
+
+.steam {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  top: 20px;
+  left: 50px;
+  animation: steam 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes steam {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-20px) scale(1);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-40px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #b5a642, #cd7f32);
+  color: #fffdd0;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-family: "Georgia", serif;
+  font-size: 14px;
+  text-align: center;
+  z-index: 2;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.5s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.card-header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #b5a642;
+  color: #5c4033;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 3;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transform: rotate(3deg);
+}
+
+.rivets {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #b5a642, #cd7f32);
+  border-radius: 50%;
+  z-index: 4;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.rivet-1 {
+  top: 10px;
+  left: 10px;
+}
+.rivet-2 {
+  top: 10px;
+  right: 10px;
+}
+.rivet-3 {
+  bottom: 10px;
+  left: 10px;
+}
+.rivet-4 {
+  bottom: 10px;
+  right: 10px;
+}
+
+.bolts-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bolt {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #b5a642, #b87333);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.bolt::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%);
+}
+
+.bolt-1 {
+  top: 20px;
+  left: 20px;
+}
+.bolt-2 {
+  top: 20px;
+  right: 20px;
+}
+.bolt-3 {
+  bottom: 20px;
+  left: 20px;
+}
+.bolt-4 {
+  bottom: 20px;
+  right: 20px;
+}
+.bolt-5 {
+  top: 220px;
+  left: 15px;
+}
+.bolt-6 {
+  top: 220px;
+  right: 15px;
+}
+
+.card-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  background-image:
+    linear-gradient(45deg, #b87333 25%, transparent 25%),
+    linear-gradient(-45deg, #b87333 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #b87333 75%),
+    linear-gradient(-45deg, transparent 75%, #b87333 75%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    0 10px,
+    10px -10px,
+    -10px 0px;
+  pointer-events: none;
+}

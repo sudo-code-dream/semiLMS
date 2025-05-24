@@ -1,92 +1,84 @@
 import React, { useEffect } from "react";
-import "../app/(root)/study-materials/[subject]/[number]/CardCanvas.css";
-import {QuickActionType3} from "@/constants";
-import {useParams, useRouter} from "next/navigation";
+import styles from "../app/(css)/CardCanvas.module.css";
+import { QuickActionType3 } from "@/constants";
+import { useParams, useRouter } from "next/navigation";
+import clsx from "clsx";
 
-const SteampunkCard = ({action}: {action: QuickActionType3}) => {
-    const router = useRouter();
-    const params = useParams();
-    const subject = params.subject;
-    const number = params.number;
+const SteampunkCard = ({ action }: { action: QuickActionType3 }) => {
+  const router = useRouter();
+  const params = useParams();
+  const subject = params.subject;
+  const number = params.number;
 
+  useEffect(() => {
+    const pipeSystem = document.querySelector(".pipe-system");
+    const joint = document.querySelector(".pipe-joint-1");
 
-    useEffect(() => {
-        const pipeSystem = document.querySelector(".pipe-system");
-        const joint = document.querySelector(".pipe-joint-1");
+    if (pipeSystem && joint) {
+      const interval = setInterval(() => {
+        const steam = document.createElement("div");
+        steam.classList.add("steam");
 
-        if (pipeSystem && joint) {
-            const interval = setInterval(() => {
-                const steam = document.createElement("div");
-                steam.classList.add("steam");
+        const jointRect = joint.getBoundingClientRect();
+        const offsetTop = jointRect.top + window.scrollY;
+        const offsetLeft = jointRect.left + window.scrollX;
 
-                const jointRect = joint.getBoundingClientRect();
-                const offsetTop = jointRect.top + window.scrollY;
-                const offsetLeft = jointRect.left + window.scrollX;
+        steam.style.top = `${offsetTop}px`;
+        steam.style.left = `${offsetLeft}px`;
 
-                steam.style.top = `${offsetTop}px`;
-                steam.style.left = `${offsetLeft}px`;
+        pipeSystem.appendChild(steam);
 
-                pipeSystem.appendChild(steam);
+        setTimeout(() => {
+          steam.remove();
+        }, 3000);
+      }, 2000);
 
-                setTimeout(() => {
-                    steam.remove();
-                }, 3000);
-            }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, []);
 
-            return () => clearInterval(interval);
-        }
-    }, []);
+  const handleLearnClick = (e: React.MouseEvent) => {
+    router.push(`/study-materials/${subject}/${number}/q/${action.id}`);
+  };
 
-    const handleLearnClick = (e: React.MouseEvent) => {
-        e.preventDefault();
-        router.push(`/study-materials/${subject}/${number}/q/${action.id}`);
-    };
+  return (
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles["card-border"]}></div>
+        <div className={styles["card-content"]}>
+          <div className={clsx(styles.rivets, styles["rivet-1"])}></div>
+          <div className={clsx(styles.rivets, styles["rivet-2"])}></div>
+          <div className={clsx(styles.rivets, styles["rivet-3"])}></div>
+          <div className={clsx(styles.rivets, styles["rivet-4"])}></div>
+          <div className={styles["card-pattern"]}></div>
 
+          <div className={clsx(styles.gear, styles["gear-1"])}></div>
+          <div className={clsx(styles.gear, styles["gear-2"])}></div>
 
-    return (
-        <div className="container"
-        >
+          <div className={styles["card-header"]}>STEAMPUNK</div>
 
-            <div className="card">
-                <div className="card-border"></div>
-                <div className="card-content">
-                    <div className="rivets rivet-1"></div>
-                    <div className="rivets rivet-2"></div>
-                    <div className="rivets rivet-3"></div>
-                    <div className="rivets rivet-4"></div>
-                    <div className="card-pattern"></div>
+          <div className={styles["card-image"]}></div>
 
-                    <div className="gear gear-1"></div>
-                    <div className="gear gear-2"></div>
+          <div className={styles["card-body"]}>
+            <h2 className={styles["card-title"]}>{action.title}</h2>
+            <p className={styles["card-text"]}>{action.description}</p>
+            <a href='#' className={styles.btn} onClick={handleLearnClick}>
+              Learn
+            </a>
+          </div>
 
-                    <div className="card-header">STEAMPUNK</div>
-
-                    <div className="card-image"></div>
-
-                    <div className="card-body">
-                        <h2 className="card-title">{action.title}</h2>
-                        <p className="card-text">
-                            {action.description}
-                        </p>
-                        <a
-                            href="#"
-                            className="btn"
-                            onClick={handleLearnClick}
-                        >Learn</a>
-                    </div>
-
-                    <div className="bolts-container">
-                        <div className="bolt bolt-1"></div>
-                        <div className="bolt bolt-2"></div>
-                        <div className="bolt bolt-3"></div>
-                        <div className="bolt bolt-4"></div>
-                        <div className="bolt bolt-5"></div>
-                        <div className="bolt bolt-6"></div>
-                    </div>
-                </div>
-            </div>
+          <div className={styles["bolts-container"]}>
+            <div className={clsx(styles.bolt, styles["bolt-1"])}></div>
+            <div className={clsx(styles.bolt, styles["bolt-2"])}></div>
+            <div className={clsx(styles.bolt, styles["bolt-3"])}></div>
+            <div className={clsx(styles.bolt, styles["bolt-4"])}></div>
+            <div className={clsx(styles.bolt, styles["bolt-5"])}></div>
+            <div className={clsx(styles.bolt, styles["bolt-6"])}></div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default SteampunkCard;

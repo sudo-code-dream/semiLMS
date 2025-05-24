@@ -32,19 +32,17 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexClerkProvider>
-      <html lang='en' suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <html lang='en'>
+        <body className={`${geistSans.variable} ${geistMono.variable} `}>
           <ThemeProvider
             attribute='class'
             defaultTheme='system'
             enableSystem
             disableTransitionOnChange>
-              <div className={"min-h-screen"}>
-                <NavbarWrapper />
-                <main className={""}> {children} </main>
-              </div>
-
+            <div className={"min-h-screen"}>
+              <NavbarWrapper />
+              <main className={""}> {children} </main>
+            </div>
           </ThemeProvider>
           <Toaster />
         </body>
