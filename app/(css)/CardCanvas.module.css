@@ -1,12 +1,3 @@
-:global(:root) {
-  --copper: #b87333;
-  --brass: #b5a642;
-  --bronze: #cd7f32;
-  --dark-brown: #5c4033;
-  --cream: #fffdd0;
-  --steam-gray: #708090;
-}
-
 .container {
   max-width: 1200px;
   display: flex;
