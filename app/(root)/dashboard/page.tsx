@@ -75,21 +75,24 @@ export default function Home() {
       color: "bg-[#059669]/20 text-[#10b981] border-[#059669]/30",
     })),
   ].sort((a, b) => b.timestamp - a.timestamp);
+  console.log(assignments,"assignments");
 
-  if (isLoading)
+
+  if(isLoading) {
     return (
-      <div className='flex items-center justify-center min-h-[60vh]'>
-        <div className='text-[#94a3b8] text-lg'>Loading...</div>
-      </div>
+        <div className='flex items-center justify-center min-h-[60vh]'>
+          <div className='text-[#94a3b8] text-lg'>Loading...</div>
+        </div>
     );
+  }
 
   return (
     <div className='min-h-screen bg-[#121620] text-[#e6e7eb]'>
-      {/* Very subtle gradient overlay */}
+
       <div className='fixed inset-0 bg-gradient-to-br from-[#1e2538]/20 via-[#1e293b]/10 to-[#1e2538]/20 pointer-events-none'></div>
 
       <div className='container max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6'>
-        {/* Welcome section with stats */}
+
         <div className='mb-6 sm:mb-10'>
           <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
             <div>
@@ -106,7 +109,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Optional stats section */}
             <div className='flex gap-3 mt-2 sm:mt-0'>
               <div className='bg-[#1e293b]/60 border border-[#334155]/40 rounded-xl px-3 sm:px-4 py-2 sm:py-3 w-full sm:w-auto'>
                 <div className='text-xs text-[#94a3b8] mb-1'>Today</div>
@@ -139,7 +141,7 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Teacher Section (conditionally rendered) */}
+        {/* Teacher Section */}
         {isTeacher && (
           <>
             <div className='rounded-lg bg-[#1e293b]/40 border border-[#334155]/30 p-4 sm:p-6 mt-7 mb-6 sm:mb-10'>

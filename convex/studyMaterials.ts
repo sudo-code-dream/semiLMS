@@ -23,13 +23,41 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const studyMaterial = await ctx.db.insert("studyMaterials", {
-      ...args,
+      description: args.description,
+      subject: args.subject,
+      gradeLevel: args.gradeLevel,
+      mainContentUrl: args.mainContentUrl,
+      quarter: args.quarter,
+      additionalResourcesUrls: args.additionalResourcesUrls,
+      fileType: args.fileType,
+      videoUrl: args.videoUrl,
+      materialBannerUrl: args.materialBannerUrl,
+      title: args.title,
+      teacherId: args.teacherId,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
     return studyMaterial;
   },
 });
+
+export const getUploadedByMeForNotif = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if(!identity) return [];
+
+    const userId = identity.subject
+
+    const uploadedByMe = await ctx.db
+        .query("studyMaterials")
+        .filter((q) => q.eq(q.field("teacherId"), userId))
+        .order("desc")
+        .take(10)
+
+    return uploadedByMe
+  }
+})
 
 export const getAll = query({
   handler: async (ctx) => {

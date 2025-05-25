@@ -69,3 +69,23 @@ export const getMyAssignments = query({
     return assignments;
   },
 });
+
+export const getAssignedToMe = query({
+  args: {}, // Add this empty args object
+  handler: async (ctx) => {
+    // Verify the user is authenticated
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    // Get the user's Clerk ID
+    const userId = identity.name;
+
+    // Get assignments made by this user
+    const assignments = await ctx.db
+      .query("assignments")
+      .filter((q) => q.eq(q.field("assignedToUserName"), userId))
+      .order("desc")
+      .take(10);
+    return assignments;
+  },
+});

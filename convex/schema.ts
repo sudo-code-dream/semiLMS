@@ -51,10 +51,10 @@ export default defineSchema({
   studyMaterials: defineTable({
     title: v.string(),
     description: v.string(),
+    teacherId: v.string(),
     subject: v.string(),
     gradeLevel: v.number(),
     quarter: v.number(),
-    teacherId: v.string(),
     mainContentUrl: v.string(), // PDF URL
     additionalResourcesUrls: v.array(v.string()), // Array of resource URLs
     fileType: v.union(
