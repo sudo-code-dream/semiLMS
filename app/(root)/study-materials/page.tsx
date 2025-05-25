@@ -28,7 +28,7 @@ export default function Home() {
   };
 
   const handleGoBack = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   if (isLoading) return <p>Loading...</p>;

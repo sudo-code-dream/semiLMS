@@ -44,20 +44,20 @@ export const create = mutation({
 export const getUploadedByMeForNotif = query({
   args: {},
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity()
-    if(!identity) return [];
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
 
-    const userId = identity.subject
+    const userId = identity.subject;
 
     const uploadedByMe = await ctx.db
-        .query("studyMaterials")
-        .filter((q) => q.eq(q.field("teacherId"), userId))
-        .order("desc")
-        .take(10)
+      .query("studyMaterials")
+      .filter((q) => q.eq(q.field("teacherId"), userId))
+      .order("desc")
+      .take(10);
 
-    return uploadedByMe
-  }
-})
+    return uploadedByMe;
+  },
+});
 
 export const getAll = query({
   handler: async (ctx) => {
@@ -101,11 +101,17 @@ export const deleteStudyMaterial = mutation({
 });
 
 export const getByQuarter = query({
-  args: { quarter: v.number() },
+  args: { quarter: v.number(), grade: v.number(), subject: v.optional(v.string()) },
   handler: async (ctx, args) => {
     const materials = await ctx.db
       .query("studyMaterials")
-      .filter((q) => q.eq(q.field("quarter"), args.quarter))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("quarter"), args.quarter),
+          q.eq(q.field("gradeLevel"), args.grade),
+          q.eq(q.field("subject"), args.subject)
+        )
+      )
       .order("desc")
       .collect();
     return materials;

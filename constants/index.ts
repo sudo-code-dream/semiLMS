@@ -46,7 +46,8 @@ export const QUICK_ACTIONS = [
   {
     icon: Users,
     title: "Check Scores",
-    description: "Check student's scores",
+    description: "Check student's scores ",
+    underConstruction: true,
     color: "purple-500",
     gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
     href: "teacher/view-scores",
@@ -74,6 +75,7 @@ export const USER_QUICK_ACTIONS = [
     icon: MdQuiz,
     title: "Quiz",
     description: "Test your skills",
+    underConstruction: true,
     color: "primary",
     gradient: "from-primary/10 via-primary/5 to-transparent",
     href: "quiz",

@@ -15,6 +15,7 @@ import {
   GraduationCap,
   ExternalLink,
   Eye,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
@@ -37,38 +38,26 @@ const FileIcon: React.FC<{ fileType?: string }> = ({ fileType }) => {
 export default function QuarterPage() {
   const params = useParams();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const { user, isLoaded } = useUser();
-  const [isLoading, setIsLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  const [stylesLoaded, setStylesLoaded] = useState(false);
+  const router = useRouter();
 
   const quarterValue =
     typeof params?.quarter === "string"
       ? Number.parseInt(params.quarter)
       : null;
   const quarter = !isNaN(quarterValue as number) ? quarterValue : null;
+  const gradeValue =
+    typeof params.grade === "string" ? Number.parseInt(params.grade) : null;
+  const subjectParam = Array.isArray(params.subject)
+    ? params.subject[0]
+    : params.subject;
+  const subject = subjectParam ?? "";
 
+  const grade = !isNaN(gradeValue as number) ? gradeValue : null;
   const materials = useQuery(api.studyMaterials.getByQuarter, {
     quarter: quarter ?? 0,
+    grade: grade ?? 0,
+    subject: subject ?? "",
   });
-
-  useEffect(() => {
-    setMounted(true);
-
-    const styleTimeout = setTimeout(() => {
-      setStylesLoaded(true);
-    }, 1000);
-
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => {
-      setMounted(false);
-      clearTimeout(timer);
-      clearTimeout(styleTimeout);
-    };
-  }, []);
 
   // Update your loading condition
 
@@ -112,9 +101,21 @@ export default function QuarterPage() {
     );
   };
 
+  const handleGoBack = () => {
+    router.push(`/study-materials/${subject}/${grade}`);
+  };
+
   return (
     <div className='min-h-screen min-w-full bg-[#0a0c14] text-zinc-100 pb-16'>
       {/* Header with gradient */}
+      <div className='absolute top-[5rem] left-6 z-10'>
+        <button
+          onClick={handleGoBack}
+          className='flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200 shadow-sm border border-zinc-200 dark:border-zinc-700'
+          aria-label='Go back'>
+          <ArrowLeft className='w-5 h-5 text-zinc-600 dark:text-zinc-400' />
+        </button>
+      </div>
       <div className='relative overflow-hidden'>
         <div className='absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-blue-500/10' />
         <div className='relative container mx-auto px-6 py-12'>

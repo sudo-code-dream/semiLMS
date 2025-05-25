@@ -2,6 +2,7 @@
 import type { QuickActionType } from "@/constants";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Hammer } from "lucide-react";
 
 // some weird tw bug, but this is how it works
 // from-orange-500/10 via-orange-500/5 to-transparent
@@ -31,19 +32,37 @@ const ActionCard = ({
 
       <div className='relative p-4 sm:p-6 size-full'>
         <div className='space-y-2 sm:space-y-3'>
-          {/* ACTION ICON */}
-          <div
-            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-[#1e293b]/80 border border-[#334155]/30 group-hover:scale-105 group-hover:border-[#4ade80]/20 transition-all duration-300`}>
-            <action.icon
-              className={`h-5 w-5 sm:h-6 sm:w-6 text-${action.color} group-hover:text-[#4ade80] transition-colors duration-300`}
-            />
+          <div className='flex items-center gap-4'>
+            {/* ACTION ICON */}
+            <div
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-[#1e293b]/80 border border-[#334155]/30 group-hover:scale-105 group-hover:border-[#4ade80]/20 transition-all duration-300`}>
+              <action.icon
+                className={`h-5 w-5 sm:h-6 sm:w-6 text-${action.color} group-hover:text-[#4ade80] transition-colors duration-300`}
+              />
+            </div>
+
+            {action.underConstruction && (
+              <>
+                <div className='relative group inline-flex items-center'>
+                  <span className='flex hover:scale-110 transition-transform'>
+                    (<Hammer className='w-4 h-4' />)
+                  </span>
+                  <span
+                    className='absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1
+                 bg-slate-800 text-white text-xs rounded whitespace-nowrap
+                 opacity-0 group-hover:opacity-100 transition-opacity'>
+                    Under Construction
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           <div className='space-y-1'>
             <h3 className='font-semibold text-lg sm:text-xl text-[#e2e8f0] group-hover:text-[#4ade80] transition-colors duration-300'>
               {action.title}
             </h3>
-            <p className='text-xs sm:text-sm text-[#94a3b8] group-hover:text-[#cbd5e1] transition-colors duration-300'>
+            <p className='text-xs line-clamp-1 sm:text-sm text-[#94a3b8] whitespace-nowrap group-hover:text-[#cbd5e1] transition-colors duration-300'>
               {action.description}
             </p>
           </div>

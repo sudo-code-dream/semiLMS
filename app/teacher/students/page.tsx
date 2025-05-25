@@ -18,10 +18,13 @@ import {
   UserCheck,
   X,
   Building,
+  ArrowLeft,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function UsersList() {
   const { user: currentUser } = useUser();
+  const router = useRouter();
   const users = useQuery(api.users.getAllUsers);
   const assignPlan = useMutation(api.users.assignInstitutionPlan);
   const logAssignment = useMutation(api.assignments.logAssignment);
@@ -119,11 +122,22 @@ export default function UsersList() {
   const studentCount =
     users?.filter((user) => user.role === "student").length || 0;
 
+  const handleGoBack = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <div className='min-h-screen w-full bg-gradient-to-b from-zinc-950 via-zinc-900 via-zinc-800 to-zinc-950 text-zinc-100 relative'>
       {/* Additional gradient overlay for more depth */}
       <div className='absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent via-blue-500/5 to-purple-500/5 pointer-events-none' />
-
+      <div className='absolute top-6 left-6 z-10'>
+        <button
+          onClick={handleGoBack}
+          className='flex items-center justify-center w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200 shadow-sm border border-zinc-200 dark:border-zinc-700'
+          aria-label='Go back'>
+          <ArrowLeft className='w-5 h-5 text-zinc-600 dark:text-zinc-400' />
+        </button>
+      </div>
       {/* Header Section */}
       <div className='relative overflow-hidden'>
         <div className='absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-blue-500/10' />
@@ -452,7 +466,6 @@ export default function UsersList() {
                   </div>
                 )}
 
-                {/* Assign Button - BALANCED SIZE */}
                 <button
                   onClick={handleAssign}
                   disabled={!selectedUserId || !schoolName || isAssigning}

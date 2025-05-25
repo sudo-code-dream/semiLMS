@@ -2,17 +2,18 @@
 import { useUserRole } from "@/hooks/useUserRole";
 import { QUICK_ACTIONS, USER_QUICK_ACTIONS } from "@/constants";
 import ActionCard from "@/components/ActionCard";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useRouter } from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { MdDashboard } from "react-icons/md";
 import { motion } from "framer-motion";
-import { Clock, Calendar, Bell, School, ChevronRight } from "lucide-react";
+import {Clock, Calendar, Bell, School, ChevronRight, ArrowLeft} from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
+  const params = useParams();
   const { user } = useUser();
   const { isTeacher, isLoading } = useUserRole();
   const interviews = useQuery(api.interviews.getMyInterviews);
@@ -20,6 +21,9 @@ export default function Home() {
 
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState<"start" | "join">();
+
+  const subject = params.subject;
+  const grade = params.grade;
 
   const handleQuickAction = (title: string) => {
     switch (title) {
@@ -84,6 +88,10 @@ export default function Home() {
           <div className='text-[#94a3b8] text-lg'>Loading...</div>
         </div>
     );
+  }
+
+  const handleGoBack = () => {
+    router.push(`/study-materials/${subject}/${grade}`);
   }
 
   return (

@@ -8,7 +8,7 @@ const SteampunkCard = ({ action }: { action: QuickActionType3 }) => {
   const router = useRouter();
   const params = useParams();
   const subject = params.subject;
-  const number = params.number;
+  const number = params.grade;
 
   useEffect(() => {
     const pipeSystem = document.querySelector(".pipe-system");

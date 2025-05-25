@@ -93,7 +93,7 @@ export default function UserProfile() {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
   const handleGoBack = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (
@@ -108,7 +108,6 @@ export default function UserProfile() {
         </button>
       </div>
 
-      {/* Profile Card */}
       <ProfileCard
         name={name}
         avatar={avatar}

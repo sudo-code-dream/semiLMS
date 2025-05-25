@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useClerk } from "@clerk/nextjs";
 import {
   CreditCard,
   FileText,
@@ -11,6 +11,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface MenuItem {
   label: string;
@@ -41,6 +42,13 @@ export default function ProfileCard({
   onTermsOpen,
 }: ProfileCardProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const router = useRouter();
+  const { signOut } = useClerk();
+
+  const handleLogOut = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    await signOut();
+  };
 
   return (
     <div className='w-full max-w-sm mx-auto items-center justify-center pt-[15rem]'>
@@ -115,11 +123,12 @@ export default function ProfileCard({
               type='button'
               className='w-full flex items-center justify-between p-2 
                 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 
-                rounded-lg transition-colors duration-200'>
+                rounded-lg transition-colors duration-200'
+              onClick={handleLogOut}>
               <div className='flex items-center gap-2'>
                 <LogOut className='w-4 h-4' />
                 <span className='text-sm font-medium text-zinc-900 dark:text-zinc-100'>
-                  <SignOutButton>Logout</SignOutButton>
+                  Logout
                 </span>
               </div>
             </button>
