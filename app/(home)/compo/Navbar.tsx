@@ -1,8 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const { user } = useUser();
+  const router = useRouter();
+
+  const handleRedirect = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <nav className='fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/10'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -39,14 +47,24 @@ export default function Navbar() {
             </div>
           </div>
           <div className='flex items-center space-x-4'>
-            <SignInButton>
-              <Button variant='ghost' className='text-sm'>
-                Sign In
+            {!user ? (
+              <>
+                <SignInButton>
+                  <Button variant='ghost' className='text-sm'>
+                    Sign In
+                  </Button>
+                </SignInButton>
+                <Button className='text-sm bg-gradient-to-r from-primary to-accent hover:opacity-90'>
+                  Get Started
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={handleRedirect}
+                className='text-sm bg-gradient-to-r from-primary to-accent hover:opacity-90'>
+                Dashboard
               </Button>
-            </SignInButton>
-            <Button className='text-sm bg-gradient-to-r from-primary to-accent hover:opacity-90'>
-              Get Started
-            </Button>
+            )}
           </div>
         </div>
       </div>
