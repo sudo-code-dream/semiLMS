@@ -1,4 +1,4 @@
-import { Code2, Users, BellDot, LanguagesIcon } from "lucide-react";
+import { Code2, Users, BellDot, LanguagesIcon, Pin } from "lucide-react";
 import { MdQuiz } from "react-icons/md";
 import { LuNotebookPen } from "react-icons/lu";
 import { FaComputer } from "react-icons/fa6";
@@ -44,6 +44,15 @@ export const QUICK_ACTIONS = [
     href: "teacher/studymaterials",
   },
   {
+    icon: MdQuiz,
+    title: "Create Quiz",
+    description: "Create quizes for your students",
+    color: "primary",
+    gradient: "from-primary/10 via-primary/5 to-transparent",
+    href: "teacher/create-quiz",
+    underConstruction: true,
+  },
+  {
     icon: Users,
     title: "Check Scores",
     description: "Check student's scores ",
@@ -59,6 +68,14 @@ export const QUICK_ACTIONS = [
     color: "purple-500",
     gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
     href: "teacher/students",
+  },
+  {
+    icon: Pin,
+    title: "Create Announcement",
+    description: "Create announcements for students",
+    color: "purple-500",
+    gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
+    href: "teacher/create-announcement",
   },
 ];
 
@@ -88,7 +105,6 @@ export const USER_QUICK_ACTIONS = [
     gradient: "from-purple-500/10 via-purple-500/5 to-transparent",
     href: "notifications",
   },
-
   {
     icon: Users,
     title: "Profile",
@@ -96,6 +112,14 @@ export const USER_QUICK_ACTIONS = [
     color: "primary",
     gradient: "from-orange-500/10 via-orange-500/5 to-transparent",
     href: "profile",
+  },
+  {
+    icon: Pin,
+    title: "Announements",
+    description: "View announcements",
+    color: "primary",
+    gradient: "from-orange-500/10 via-orange-500/5 to-transparent",
+    href: "announcements",
   },
 ];
 

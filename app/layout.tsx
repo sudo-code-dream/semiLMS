@@ -53,7 +53,7 @@ export default function RootLayout({
             disableTransitionOnChange>
             <div className={"min-h-screen"}>
               <NavbarWrapper />
-              <main className={""}> {children} </main>
+              <main className={""}> {children} <Toaster /> </main>
             </div>
           </ThemeProvider>
           <Toaster />

@@ -3,11 +3,28 @@ import React from "react";
 import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
 import { CodeIcon } from "lucide-react";
-import { SignedIn, UserButton } from "@clerk/nextjs";
-import DashboardBtn from "@/components/DashboardBtn";
+import {SignedIn, UserButton, useUser} from "@clerk/nextjs";
+import TDashboarBtn from "@/components/TDashboardBtn";
 import Image from "next/image";
+import {useQuery} from "convex/react";
+import {api} from "@/convex/_generated/api";
+import TDashboardBtn from "@/components/TDashboardBtn";
+import DashboardBtn from "@/components/DashboardBtn";
 
 const Navbar = () => {
+    const { user } = useUser();
+
+  const roleData = useQuery(api.users.getUserRoleData, {
+    userId: user?.id ?? "",
+  });
+
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  const rawRole = roleData?.companyRole?.trim() || roleData?.role?.trim();
+  const role = rawRole ? capitalizeFirstLetter(rawRole) : null;
+
   return (
     <nav className={"border-b"}>
       <div
@@ -30,7 +47,12 @@ const Navbar = () => {
 
         <SignedIn>
           <div className={"flex items-center space-x-4 ml-auto"}>
-            <DashboardBtn />
+            {roleData?.companyRole ? (
+                <TDashboardBtn />
+            ): (
+                <DashboardBtn />
+              )}
+
             <ModeToggle />
             <UserButton />
           </div>

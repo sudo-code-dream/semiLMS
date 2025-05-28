@@ -84,4 +84,47 @@ export default defineSchema({
     .index("by_assigned_to", ["assignedToUserId"])
     .index("by_type", ["type"])
     .index("by_created_at", ["createdAt"]),
+
+  quizzes: defineTable({
+    title: v.string(),
+    description: v.string(),
+    code: v.string(), // unique access code
+    questions: v.array(
+      v.object({
+        type: v.string(),
+        question: v.string(),
+        options: v.optional(v.array(v.string())),
+        correctAnswer: v.any(),
+        points: v.number(),
+      })
+    ),
+    timeLimit: v.optional(v.number()),
+    createdBy: v.string(),
+    createdAt: v.number(),
+  }).index("by_code", ["code"]), // Move the index here
+
+  quizSubmissions: defineTable({
+    quizId: v.id("quizzes"),
+    studentId: v.string(),
+    answers: v.array(v.any()),
+    score: v.number(),
+    submittedAt: v.number(),
+  }).index("by_quiz_id", ["quizId"]), //
+
+  announcements: defineTable({
+    title: v.string(),
+    content: v.string(),
+    schoolName: v.string(),
+    teacherId: v.string(), // clerkId of the teacher
+    teacherName: v.string(),
+    createdAt: v.number(),
+    isPinned: v.optional(v.boolean()),
+    attachments: v.optional(v.array(v.string())), // Optional file attachments
+    tags: v.optional(v.array(v.string())), // Optional tags for categorization
+    status: v.union(v.literal("active"), v.literal("archived")),
+  })
+    .index("by_school", ["schoolName"]) // For filtering announcements by school
+    .index("by_teacher", ["teacherId"]) // For teachers to view their announcements
+    .index("by_created", ["createdAt"]) // For sorting by date
+    .index("by_status", ["status"]),
 });

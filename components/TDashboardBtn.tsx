@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {SparklesIcon} from "lucide-react";
 import {useUserRole} from "@/hooks/useUserRole";
 
-const TDashboarBtn = () => {
+const TDashboardBtn = () => {
     const { isLoading } = useUserRole()
 
     if(isLoading) return null;
@@ -20,4 +20,4 @@ const TDashboarBtn = () => {
     );
 };
 
-export default TDashboarBtn;
+export default TDashboardBtn;

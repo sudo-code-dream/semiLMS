@@ -13,11 +13,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as announcements from "../announcements.js";
 import type * as assignments from "../assignments.js";
 import type * as comments from "../comments.js";
 import type * as files from "../files.js";
 import type * as http from "../http.js";
 import type * as interviews from "../interviews.js";
+import type * as quizes from "../quizes.js";
 import type * as studyMaterials from "../studyMaterials.js";
 import type * as users from "../users.js";
 
@@ -30,11 +32,13 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  announcements: typeof announcements;
   assignments: typeof assignments;
   comments: typeof comments;
   files: typeof files;
   http: typeof http;
   interviews: typeof interviews;
+  quizes: typeof quizes;
   studyMaterials: typeof studyMaterials;
   users: typeof users;
 }>;
